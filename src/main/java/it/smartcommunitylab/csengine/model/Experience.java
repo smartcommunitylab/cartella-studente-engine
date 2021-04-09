@@ -10,9 +10,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Document
-public class Activity {
+public class Experience {
 	@Id
 	private String id;
+	private String personId;
 	private String title;
 	private String description;
 	private String entityType;
@@ -100,6 +101,14 @@ public class Activity {
 
 	public void setViews(Map<String, DataView> views) {
 		this.views = views;
+	}
+
+	public String getPersonId() {
+		return personId;
+	}
+
+	public void setPersonId(String personId) {
+		this.personId = personId;
 	}
 	
 }

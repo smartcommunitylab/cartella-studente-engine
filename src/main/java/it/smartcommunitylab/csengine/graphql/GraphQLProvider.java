@@ -20,6 +20,7 @@ import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
+import it.smartcommunitylab.csengine.graphql.fetcher.GraphQLExperienceDataFetcher;
 import it.smartcommunitylab.csengine.graphql.fetcher.GraphQLPersonDataFetcher;
 
 @Component
@@ -28,6 +29,8 @@ public class GraphQLProvider {
 	
 	@Autowired
 	GraphQLPersonDataFetcher personDataFetcher;
+	@Autowired
+	GraphQLExperienceDataFetcher experienceDataFetcher;
 	
 	@Bean
   public GraphQL graphQL() { 
@@ -53,6 +56,7 @@ public class GraphQLProvider {
     return RuntimeWiring.newRuntimeWiring()
     		.type(newTypeWiring("Query")
 		    		.dataFetcher("personByFiscalCode", personDataFetcher.searchPersonByFiscalCode())
+		    		.dataFetcher("getExams", experienceDataFetcher.searchExamsByPersonId())
 		    )
 		    .build();
   }

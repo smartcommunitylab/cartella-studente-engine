@@ -1,5 +1,6 @@
 type Query {
   personByFiscalCode(text: String): [Person]
+  getExams(personId: String): [Exam]
 }
 
 type Person {
@@ -7,4 +8,21 @@ type Person {
 	name: String
 	surname: String
 	fiscalCode: String
+}
+
+type Exam {
+	id: ID
+	title: String
+	description: String
+	entityType: String
+	dateFrom: String
+	dateTo: String
+	validityFrom: String
+	validityTo: String
+	type: String
+	qualification: String
+	honour: Boolean
+	grade: String
+	result: Boolean
+	externalCandidate: Boolean
 }
