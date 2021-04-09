@@ -1,0 +1,10 @@
+type Query {
+  personByFiscalCode(text: String): [Person]
+}
+
+type Person {
+	id: ID
+	name: String
+	surname: String
+	fiscalCode: String
+}
