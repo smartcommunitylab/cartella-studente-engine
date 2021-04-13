@@ -10,13 +10,19 @@ import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
+import it.smartcommunitylab.csengine.model.Organisation;
 import it.smartcommunitylab.csengine.model.dto.ExamDTO;
+import it.smartcommunitylab.csengine.model.dto.ExperienceDTO;
+import it.smartcommunitylab.csengine.model.dto.OrganisationDTO;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
+import it.smartcommunitylab.csengine.repository.OrganisationRepository;
 
 @Component
 public class GraphQLExperienceDataFetcher {
 	@Autowired
 	ExperienceRepository experienceRepository;
+	@Autowired
+	OrganisationRepository organisationRepository;
 	
 	public DataFetcher<Stream<ExamDTO>> searchExamsByPersonId() {
 		return dataFetchingEnvironment -> {
@@ -24,6 +30,17 @@ public class GraphQLExperienceDataFetcher {
 			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.EXAM.label)
 					.map(this::getExamDTO)
 					.toStream();
+		};
+	}
+	
+	public DataFetcher<OrganisationDTO> getOrganization() {
+		return dataFetchingEnvironment -> {
+			ExperienceDTO exp = dataFetchingEnvironment.getSource();
+			if(exp.getOrganisationId() != null) {
+				return organisationRepository.findById(exp.getOrganisationId())
+						.map(this::getOrganisationDTO).block();
+			}
+			return null;
 		};
 	}
 	
@@ -39,6 +56,12 @@ public class GraphQLExperienceDataFetcher {
 			dto.setResult((Boolean) dataView.getAttributes().get(ExamAttr.RESULT.label));
 			dto.setExternalCandidate((Boolean) dataView.getAttributes().get(ExamAttr.EXTCANDIDATE.label));
 		}
+		return dto;
+	}
+	
+	private OrganisationDTO getOrganisationDTO(Organisation o) {
+		OrganisationDTO dto = new OrganisationDTO(o);
+		//TODO add logic to manage multiple view
 		return dto;
 	}
 

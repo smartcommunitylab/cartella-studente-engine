@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -14,9 +15,11 @@ public class Experience {
 	@Id
 	private String id;
 	private String personId;
+	private String organisationId;
 	private String title;
 	private String description;
 	private String entityType;
+	private GeoJsonPoint location;
 	private Map<String, DataView> views = new HashMap<>();
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -109,6 +112,22 @@ public class Experience {
 
 	public void setPersonId(String personId) {
 		this.personId = personId;
+	}
+
+	public GeoJsonPoint getLocation() {
+		return location;
+	}
+
+	public void setLocation(GeoJsonPoint location) {
+		this.location = location;
+	}
+
+	public String getOrganisationId() {
+		return organisationId;
+	}
+
+	public void setOrganisationId(String organisationId) {
+		this.organisationId = organisationId;
 	}
 	
 }

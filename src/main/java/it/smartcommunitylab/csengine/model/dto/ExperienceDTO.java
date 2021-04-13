@@ -1,25 +1,25 @@
 package it.smartcommunitylab.csengine.model.dto;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
 
 public class ExperienceDTO {
 	private String id;
+	private String personId;
+	private String organisationId;
 	private String title;
 	private String description;
 	private String entityType;
-	private Map<String, DataView> views = new HashMap<>();
 	
 	public ExperienceDTO() {}
 	
 	public ExperienceDTO(Experience e) {
 		this.id = e.getId();
+		this.personId = e.getPersonId();
+		this.organisationId = e.getOrganisationId();
 		this.title = e.getTitle();
 		this.description = e.getDescription();
 		this.entityType = e.getEntityType();
@@ -27,7 +27,6 @@ public class ExperienceDTO {
 		this.dateTo = e.getDateTo();
 		this.validityFrom = e.getValidityFrom();
 		this.validityTo = e.getValidityTo();
-		this.views.putAll(e.getViews());
 	}
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -106,12 +105,20 @@ public class ExperienceDTO {
 		this.entityType = entityType;
 	}
 
-	public Map<String, DataView> getViews() {
-		return views;
+	public String getPersonId() {
+		return personId;
 	}
 
-	public void setViews(Map<String, DataView> views) {
-		this.views = views;
+	public void setPersonId(String personId) {
+		this.personId = personId;
 	}
-	
+
+	public String getOrganisationId() {
+		return organisationId;
+	}
+
+	public void setOrganisationId(String organisationId) {
+		this.organisationId = organisationId;
+	}
+
 }

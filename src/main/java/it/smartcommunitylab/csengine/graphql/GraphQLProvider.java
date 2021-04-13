@@ -58,6 +58,9 @@ public class GraphQLProvider {
 		    		.dataFetcher("personByFiscalCode", personDataFetcher.searchPersonByFiscalCode())
 		    		.dataFetcher("getExams", experienceDataFetcher.searchExamsByPersonId())
 		    )
+		    .type(newTypeWiring("Exam")
+		    		.dataFetcher("place", experienceDataFetcher.getOrganization())
+		    )    		
 		    .build();
   }
   

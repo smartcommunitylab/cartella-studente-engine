@@ -25,4 +25,16 @@ type Exam {
 	grade: String
 	result: Boolean
 	externalCandidate: Boolean
+	place: Organisation	
+}
+
+type Organisation {
+	id: ID
+	name: String
+	description: String
+	address: String
+	phone: String
+	email: String
+	pec: String
+	fiscalCode: String
 }

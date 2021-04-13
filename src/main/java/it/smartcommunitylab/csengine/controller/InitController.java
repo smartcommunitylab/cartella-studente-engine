@@ -13,8 +13,10 @@ import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
+import it.smartcommunitylab.csengine.model.Organisation;
 import it.smartcommunitylab.csengine.model.Person;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
+import it.smartcommunitylab.csengine.repository.OrganisationRepository;
 import it.smartcommunitylab.csengine.repository.PersonRepository;
 import reactor.core.publisher.Flux;
 
@@ -24,6 +26,8 @@ public class InitController {
 	PersonRepository personRepository;
 	@Autowired
 	ExperienceRepository experienceRepository;
+	@Autowired
+	OrganisationRepository organisationRepository;
 	
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
@@ -44,6 +48,13 @@ public class InitController {
 		
 		Thread.sleep(2000);
 		
+		Organisation o = new Organisation();
+		o.setName("Organisation1");
+		o.setDescription("description");
+		o.setFiscalCode("111111111");
+		organisationRepository.deleteAll().block();
+		o = organisationRepository.save(o).block();
+		
 		int min = 10;
 		int max = 31;
 		Random random = new Random();
@@ -52,6 +63,7 @@ public class InitController {
 		for(int i = 0; i < 5; i++) {
 			Experience exp = new Experience();
 			exp.setPersonId(p.getId());
+			exp.setOrganisationId(o.getId());
 			exp.setTitle("title" + i);
 			exp.setEntityType(EntityType.EXAM.label);
 			int giorno = random.nextInt(max - min) + min;
