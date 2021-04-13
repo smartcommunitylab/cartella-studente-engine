@@ -25,7 +25,8 @@ type Exam {
 	grade: String
 	result: Boolean
 	externalCandidate: Boolean
-	place: Organisation	
+	place: Organisation
+	competences: [Competence]	
 }
 
 type Organisation {
@@ -37,4 +38,12 @@ type Organisation {
 	email: String
 	pec: String
 	fiscalCode: String
+}
+
+type Competence {
+	id: ID
+	uri: String
+	concentType: String
+	preferredLabel: String
+	altLabel: String
 }

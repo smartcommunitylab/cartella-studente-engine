@@ -2,6 +2,7 @@ package it.smartcommunitylab.csengine.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Random;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -9,12 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.collect.ImmutableMap;
+
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
+import it.smartcommunitylab.csengine.model.Competence;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.Organisation;
 import it.smartcommunitylab.csengine.model.Person;
+import it.smartcommunitylab.csengine.repository.CompetenceRepository;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
 import it.smartcommunitylab.csengine.repository.OrganisationRepository;
 import it.smartcommunitylab.csengine.repository.PersonRepository;
@@ -28,6 +33,8 @@ public class InitController {
 	ExperienceRepository experienceRepository;
 	@Autowired
 	OrganisationRepository organisationRepository;
+	@Autowired
+	CompetenceRepository competenceRepository;
 	
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
@@ -55,6 +62,13 @@ public class InitController {
 		organisationRepository.deleteAll().block();
 		o = organisationRepository.save(o).block();
 		
+		Competence c = new Competence();
+		c.setUri("http://data.europa.eu/esco/skill/09638218-695c-44c7-bac3-26b45a2ae418");
+		c.setConcentType("KnowledgeSkillCompetence");
+		c.setPreferredLabel(ImmutableMap.of("it", "svolgere i patch test", "en", "conduct patch testing"));
+		competenceRepository.deleteAll().block();
+		c = competenceRepository.save(c).block();
+		
 		int min = 10;
 		int max = 31;
 		Random random = new Random();
@@ -77,8 +91,9 @@ public class InitController {
 			dataView.getAttributes().put(ExamAttr.GRADE.label, "110/110");
 			dataView.getAttributes().put(ExamAttr.RESULT.label, Boolean.TRUE);
 			dataView.getAttributes().put(ExamAttr.EXTCANDIDATE.label, Boolean.FALSE);
-			exp.getViews().put("view1", dataView);
+			exp.setViews(ImmutableMap.of("view1", dataView));
 			
+			exp.setCompetences(Arrays.asList("http://data.europa.eu/esco/skill/09638218-695c-44c7-bac3-26b45a2ae418"));
 			dataExp[i] = exp;
 		}
 		experienceRepository.deleteAll()

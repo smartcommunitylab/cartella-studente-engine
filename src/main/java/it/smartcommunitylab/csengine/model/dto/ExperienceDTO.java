@@ -1,6 +1,7 @@
 package it.smartcommunitylab.csengine.model.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -13,7 +14,21 @@ public class ExperienceDTO {
 	private String title;
 	private String description;
 	private String entityType;
+		
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate dateFrom;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate dateTo;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate validityFrom;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate validityTo;
+	
+	private List<String> competences;
+
 	public ExperienceDTO() {}
 	
 	public ExperienceDTO(Experience e) {
@@ -27,19 +42,10 @@ public class ExperienceDTO {
 		this.dateTo = e.getDateTo();
 		this.validityFrom = e.getValidityFrom();
 		this.validityTo = e.getValidityTo();
+		if(e.getCompetences() != null) {
+			this.competences = e.getCompetences();
+		}
 	}
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate dateFrom;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate dateTo;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate validityFrom;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate validityTo;
 
 	public String getId() {
 		return id;
@@ -119,6 +125,14 @@ public class ExperienceDTO {
 
 	public void setOrganisationId(String organisationId) {
 		this.organisationId = organisationId;
+	}
+
+	public List<String> getCompetences() {
+		return competences;
+	}
+
+	public void setCompetences(List<String> competences) {
+		this.competences = competences;
 	}
 
 }

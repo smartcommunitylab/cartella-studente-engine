@@ -1,7 +1,7 @@
 package it.smartcommunitylab.csengine.model;
 
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
@@ -20,7 +20,7 @@ public class Experience {
 	private String description;
 	private String entityType;
 	private GeoJsonPoint location;
-	private Map<String, DataView> views = new HashMap<>();
+	private Map<String, DataView> views;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate dateFrom;
@@ -33,6 +33,8 @@ public class Experience {
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate validityTo;
+	
+	private List<String> competences;
 
 	public String getId() {
 		return id;
@@ -128,6 +130,14 @@ public class Experience {
 
 	public void setOrganisationId(String organisationId) {
 		this.organisationId = organisationId;
+	}
+
+	public List<String> getCompetences() {
+		return competences;
+	}
+
+	public void setCompetences(List<String> competences) {
+		this.competences = competences;
 	}
 	
 }

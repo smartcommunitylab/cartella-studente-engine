@@ -60,6 +60,7 @@ public class GraphQLProvider {
 		    )
 		    .type(newTypeWiring("Exam")
 		    		.dataFetcher("place", experienceDataFetcher.getOrganization())
+		    		.dataFetcher("competences", experienceDataFetcher.getCompetences())
 		    )    		
 		    .build();
   }

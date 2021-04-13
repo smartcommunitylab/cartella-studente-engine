@@ -8,12 +8,15 @@ import org.springframework.stereotype.Component;
 import graphql.schema.DataFetcher;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
+import it.smartcommunitylab.csengine.model.Competence;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.Organisation;
+import it.smartcommunitylab.csengine.model.dto.CompetenceDTO;
 import it.smartcommunitylab.csengine.model.dto.ExamDTO;
 import it.smartcommunitylab.csengine.model.dto.ExperienceDTO;
 import it.smartcommunitylab.csengine.model.dto.OrganisationDTO;
+import it.smartcommunitylab.csengine.repository.CompetenceRepository;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
 import it.smartcommunitylab.csengine.repository.OrganisationRepository;
 
@@ -23,6 +26,8 @@ public class GraphQLExperienceDataFetcher {
 	ExperienceRepository experienceRepository;
 	@Autowired
 	OrganisationRepository organisationRepository;
+	@Autowired
+	CompetenceRepository competenceRepository;
 	
 	public DataFetcher<Stream<ExamDTO>> searchExamsByPersonId() {
 		return dataFetchingEnvironment -> {
@@ -44,6 +49,15 @@ public class GraphQLExperienceDataFetcher {
 		};
 	}
 	
+	public DataFetcher<Stream<CompetenceDTO>> getCompetences() {
+		return dataFetchingEnvironment -> {
+			ExperienceDTO exp = dataFetchingEnvironment.getSource();
+			return competenceRepository.findByUriIn(exp.getCompetences())
+					.map(this::getCompetenceDTO)
+					.toStream();
+		};
+	}
+	
 	private ExamDTO getExamDTO(Experience e) {
 		ExamDTO dto = new ExamDTO(e);
 		//TODO add logic to manage multiple view
@@ -61,6 +75,12 @@ public class GraphQLExperienceDataFetcher {
 	
 	private OrganisationDTO getOrganisationDTO(Organisation o) {
 		OrganisationDTO dto = new OrganisationDTO(o);
+		//TODO add logic to manage multiple view
+		return dto;
+	}
+	
+	private CompetenceDTO getCompetenceDTO(Competence c) {
+		CompetenceDTO dto = new CompetenceDTO(c, "it");
 		//TODO add logic to manage multiple view
 		return dto;
 	}
