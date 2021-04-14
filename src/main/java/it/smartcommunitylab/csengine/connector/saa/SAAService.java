@@ -23,8 +23,9 @@ public class SAAService {
 		return client.get().uri("/saa/student?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
 				.exchangeToMono(response -> {
 					if (response.statusCode().equals(HttpStatus.OK)) {
-						SAAStudent s = response.bodyToMono(SAAStudent.class).block();
-						return personRepository.updateView(person.getId(), View.SAA.label, getDataView(s));
+						return response.bodyToMono(SAAStudent.class).flatMap(s -> {
+							return personRepository.updateView(person.getId(), View.SAA.label, getDataView(s));
+						});
 					}
 					return Mono.empty();
 				});		
@@ -43,6 +44,14 @@ public class SAAService {
 		view.getAttributes().put("phone", s.getPhone());
 		view.getAttributes().put("mobilePhone", s.getMobilePhone());
 		return view;
+	}
+	
+	public Mono<Person> fillPersonFields(Person p) {
+		DataView view = p.getViews().get(View.SAA.label);
+		return personRepository.updateFields(p.getId(), 
+				(String) view.getAttributes().get("name"), 
+				(String) view.getAttributes().get("surname"), 
+				(String) view.getAttributes().get("cf"));
 	}
 
 }

@@ -8,12 +8,14 @@ import java.util.Random;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.ImmutableMap;
 
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
+import it.smartcommunitylab.csengine.connector.saa.SAAStudent;
 import it.smartcommunitylab.csengine.model.Competence;
 import it.smartcommunitylab.csengine.model.ExpCompetence;
 import it.smartcommunitylab.csengine.model.Experience;
@@ -40,9 +42,16 @@ public class InitController {
 	
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
-	@GetMapping("/saa/person")
-	public Person getPerson() {
-		return personRepository.findAll().blockFirst();
+	@GetMapping("/saa/student")
+	public SAAStudent getSAAStudent(@RequestParam String fiscalCode) {
+		SAAStudent s = new SAAStudent();
+		s.setOrigin("INFOTNISTRUZIONE");
+		s.setExtId("812912");
+		s.setCf(fiscalCode);
+		s.setName("Mario");
+		s.setSurname("Rossi");
+		s.setEmail("mario.rossi@gmail.com");
+		return s;
 	}
 	
 	@GetMapping("/init")

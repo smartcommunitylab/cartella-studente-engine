@@ -21,4 +21,12 @@ public class PersonRepositoryCustomImpl implements PersonRepositoryCustom {
 			.findAndModify();
 	}
 
+	@Override
+	public Mono<Person> updateFields(String personId, String name, String surname, String fiscalCode) {
+		return template.update(Person.class)
+				.matching(Criteria.where("id").is(personId))
+				.apply(new Update().set("name", name).set("surname", surname).set("fiscalCode", fiscalCode))
+				.findAndModify();
+	}
+
 }

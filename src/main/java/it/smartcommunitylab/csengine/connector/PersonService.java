@@ -1,11 +1,9 @@
 package it.smartcommunitylab.csengine.connector;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 
+import it.smartcommunitylab.csengine.connector.saa.SAAService;
 import it.smartcommunitylab.csengine.model.Person;
 import it.smartcommunitylab.csengine.repository.PersonRepository;
 import reactor.core.publisher.Mono;
@@ -14,18 +12,24 @@ import reactor.core.publisher.Mono;
 public class PersonService {
 	@Autowired
 	PersonRepository personRepository;
+	@Autowired
+	SAAService saaService;
 	
 	public Mono<Person> refreshPerson(String fiscalCode) {
 		// TODO add logic to manage connectors choice
-		WebClient client = WebClient.create("http://localhost:8080");
-		return client.get().uri("/person").accept(MediaType.APPLICATION_JSON)
-				.exchangeToMono(response -> {
-					if (response.statusCode().equals(HttpStatus.OK)) {
-						Mono<Person> p = response.bodyToMono(Person.class);
-						
-						return p;
-					}
-					return Mono.empty();
-				});
+		return personRepository.findByFiscalCode(fiscalCode).switchIfEmpty(this.addNewPerson(fiscalCode)).flatMap(this::mergeView);
+	}
+	
+	private Mono<Person> mergeView(Person person) {
+		return saaService.refreshPerson(person).flatMap(p -> {
+			//TODO add logic to manage views
+			return saaService.fillPersonFields(p);			
+		});
+	}
+	
+	private Mono<Person> addNewPerson(String fiscalCode) {
+		Person p = new Person();
+		p.setFiscalCode(fiscalCode);
+		return personRepository.save(p);
 	}
 }

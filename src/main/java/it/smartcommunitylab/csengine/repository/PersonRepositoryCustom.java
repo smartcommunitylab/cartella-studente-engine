@@ -6,4 +6,5 @@ import reactor.core.publisher.Mono;
 
 public interface PersonRepositoryCustom {
 	public Mono<Person> updateView(String personId, String view, DataView dw); 
+	public Mono<Person> updateFields(String personId, String name, String surname, String fiscalCode);
 }
