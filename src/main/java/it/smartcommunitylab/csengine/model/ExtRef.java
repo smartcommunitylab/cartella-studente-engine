@@ -4,6 +4,13 @@ public class ExtRef {
 	private String extUri;
 	private String origin;
 	
+	public ExtRef() {}
+	
+	public ExtRef(String extUri, String origin) {
+		this.extUri = extUri;
+		this.origin = origin;
+	}
+	
 	public String getExtUri() {
 		return extUri;
 	}

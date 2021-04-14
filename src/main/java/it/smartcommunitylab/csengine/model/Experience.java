@@ -19,6 +19,7 @@ public class Experience {
 	private String description;
 	private String entityType;
 	private GeoJsonPoint location;
+	private Map<String, Object> attributes;
 	private Map<String, DataView> views;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -127,6 +128,14 @@ public class Experience {
 
 	public void setOrganisationId(String organisationId) {
 		this.organisationId = organisationId;
+	}
+
+	public Map<String, Object> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(Map<String, Object> attributes) {
+		this.attributes = attributes;
 	}
 
 }

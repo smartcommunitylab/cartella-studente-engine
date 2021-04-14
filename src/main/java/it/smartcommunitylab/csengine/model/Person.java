@@ -1,6 +1,5 @@
 package it.smartcommunitylab.csengine.model;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
@@ -13,7 +12,7 @@ public class Person {
 	private String name;
 	private String surname;
 	private String fiscalCode;
-	private Map<String, DataView> views = new HashMap<>();
+	private Map<String, DataView> views;
 	
 	public String getId() {
 		return id;

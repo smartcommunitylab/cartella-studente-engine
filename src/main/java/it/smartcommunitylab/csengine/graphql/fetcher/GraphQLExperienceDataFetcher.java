@@ -9,7 +9,6 @@ import graphql.schema.DataFetcher;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.model.Competence;
-import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.Organisation;
 import it.smartcommunitylab.csengine.model.dto.CompetenceDTO;
@@ -64,28 +63,22 @@ public class GraphQLExperienceDataFetcher {
 	
 	private ExamDTO getExamDTO(Experience e) {
 		ExamDTO dto = new ExamDTO(e);
-		//TODO add logic to manage multiple view
-		DataView dataView = e.getViews().get("view1");
-		if(dataView != null) {
-			dto.setType((String) dataView.getAttributes().get(ExamAttr.TYPE.label));
-			dto.setQualification((String) dataView.getAttributes().get(ExamAttr.QUALIFICATION.label));
-			dto.setHonour((Boolean) dataView.getAttributes().get(ExamAttr.HONOUR.label));
-			dto.setGrade((String) dataView.getAttributes().get(ExamAttr.GRADE.label));
-			dto.setResult((Boolean) dataView.getAttributes().get(ExamAttr.RESULT.label));
-			dto.setExternalCandidate((Boolean) dataView.getAttributes().get(ExamAttr.EXTCANDIDATE.label));
-		}
+		dto.setType((String) e.getAttributes().get(ExamAttr.TYPE.label));
+		dto.setQualification((String) e.getAttributes().get(ExamAttr.QUALIFICATION.label));
+		dto.setHonour((Boolean) e.getAttributes().get(ExamAttr.HONOUR.label));
+		dto.setGrade((String) e.getAttributes().get(ExamAttr.GRADE.label));
+		dto.setResult((Boolean) e.getAttributes().get(ExamAttr.RESULT.label));
+		dto.setExternalCandidate((Boolean) e.getAttributes().get(ExamAttr.EXTCANDIDATE.label));
 		return dto;
 	}
 	
 	private OrganisationDTO getOrganisationDTO(Organisation o) {
 		OrganisationDTO dto = new OrganisationDTO(o);
-		//TODO add logic to manage multiple view
 		return dto;
 	}
 	
 	private CompetenceDTO getCompetenceDTO(Competence c) {
 		CompetenceDTO dto = new CompetenceDTO(c, "it");
-		//TODO add logic to manage multiple view
 		return dto;
 	}
 

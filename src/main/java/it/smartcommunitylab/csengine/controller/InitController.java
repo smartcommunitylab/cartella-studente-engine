@@ -2,6 +2,7 @@ package it.smartcommunitylab.csengine.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Random;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -14,7 +15,6 @@ import com.google.common.collect.ImmutableMap;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.model.Competence;
-import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.ExpCompetence;
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.Organisation;
@@ -39,6 +39,11 @@ public class InitController {
 	ExpCompetenceRepository expCompetenceRepository;
 	
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	
+	@GetMapping("/saa/person")
+	public Person getPerson() {
+		return personRepository.findAll().blockFirst();
+	}
 	
 	@GetMapping("/init")
 	public void init() throws InterruptedException {
@@ -77,16 +82,13 @@ public class InitController {
 			int giorno = random.nextInt(max - min) + min;
 			exp.setDateFrom(LocalDate.parse("2021-04-" + giorno, dtf));
 			exp.setDateTo(LocalDate.parse("2021-04-" + giorno, dtf));
-			
-			DataView dataView = new DataView();
-			dataView.getAttributes().put(ExamAttr.TYPE.label, "INFORMATICA");
-			dataView.getAttributes().put(ExamAttr.QUALIFICATION.label, "DOTTORE");
-			dataView.getAttributes().put(ExamAttr.HONOUR.label, Boolean.TRUE);
-			dataView.getAttributes().put(ExamAttr.GRADE.label, "110/110");
-			dataView.getAttributes().put(ExamAttr.RESULT.label, Boolean.TRUE);
-			dataView.getAttributes().put(ExamAttr.EXTCANDIDATE.label, Boolean.FALSE);
-			exp.setViews(ImmutableMap.of("view1", dataView));
-			
+			exp.setAttributes(new HashMap<>());
+			exp.getAttributes().put(ExamAttr.TYPE.label, "INFORMATICA");
+			exp.getAttributes().put(ExamAttr.QUALIFICATION.label, "DOTTORE");
+			exp.getAttributes().put(ExamAttr.HONOUR.label, Boolean.TRUE);
+			exp.getAttributes().put(ExamAttr.GRADE.label, "110/110");
+			exp.getAttributes().put(ExamAttr.RESULT.label, Boolean.TRUE);
+			exp.getAttributes().put(ExamAttr.EXTCANDIDATE.label, Boolean.FALSE);			
 			exp = experienceRepository.save(exp).block();
 			
 			ExpCompetence expComp = new ExpCompetence(p.getId(), exp.getId(), c.getId());
