@@ -2,7 +2,6 @@ package it.smartcommunitylab.csengine.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Random;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -16,14 +15,15 @@ import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.model.Competence;
 import it.smartcommunitylab.csengine.model.DataView;
+import it.smartcommunitylab.csengine.model.ExpCompetence;
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.Organisation;
 import it.smartcommunitylab.csengine.model.Person;
 import it.smartcommunitylab.csengine.repository.CompetenceRepository;
+import it.smartcommunitylab.csengine.repository.ExpCompetenceRepository;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
 import it.smartcommunitylab.csengine.repository.OrganisationRepository;
 import it.smartcommunitylab.csengine.repository.PersonRepository;
-import reactor.core.publisher.Flux;
 
 @RestController
 public class InitController {
@@ -35,25 +35,19 @@ public class InitController {
 	OrganisationRepository organisationRepository;
 	@Autowired
 	CompetenceRepository competenceRepository;
+	@Autowired
+	ExpCompetenceRepository expCompetenceRepository;
 	
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
 	@GetMapping("/init")
 	public void init() throws InterruptedException {
-		Person[] data = new Person[1000];
-		for(int i = 0; i < 1000; i++) {
-			Person person = new Person();
-			person.setFiscalCode(RandomStringUtils.randomAlphanumeric(16));
-			person.setName("name" + i);
-			person.setSurname("surname" + i);
-			data[i] = person;
-		}
-		personRepository.deleteAll()
-		.thenMany(Flux.just(data))
-		.flatMap(personRepository::save)
-		.subscribe();
-		
-		Thread.sleep(2000);
+		Person p = new Person();
+		p.setFiscalCode(RandomStringUtils.randomAlphanumeric(16));
+		p.setName("name1");
+		p.setSurname("surname1");
+		personRepository.deleteAll().block();
+		p = personRepository.save(p).block();
 		
 		Organisation o = new Organisation();
 		o.setName("Organisation1");
@@ -69,12 +63,12 @@ public class InitController {
 		competenceRepository.deleteAll().block();
 		c = competenceRepository.save(c).block();
 		
+		expCompetenceRepository.deleteAll().block();
+		experienceRepository.deleteAll().block();
 		int min = 10;
 		int max = 31;
 		Random random = new Random();
-		Experience[] dataExp = new Experience[5];
-		Person p = personRepository.findByFiscalCode(data[0].getFiscalCode()).toStream().findFirst().orElse(null);
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < 3; i++) {
 			Experience exp = new Experience();
 			exp.setPersonId(p.getId());
 			exp.setOrganisationId(o.getId());
@@ -93,12 +87,10 @@ public class InitController {
 			dataView.getAttributes().put(ExamAttr.EXTCANDIDATE.label, Boolean.FALSE);
 			exp.setViews(ImmutableMap.of("view1", dataView));
 			
-			exp.setCompetences(Arrays.asList("http://data.europa.eu/esco/skill/09638218-695c-44c7-bac3-26b45a2ae418"));
-			dataExp[i] = exp;
+			exp = experienceRepository.save(exp).block();
+			
+			ExpCompetence expComp = new ExpCompetence(p.getId(), exp.getId(), c.getId());
+			expCompetenceRepository.save(expComp).block();
 		}
-		experienceRepository.deleteAll()
-		.thenMany(Flux.just(dataExp))
-		.flatMap(experienceRepository::save)
-		.subscribe();
 	}
 }

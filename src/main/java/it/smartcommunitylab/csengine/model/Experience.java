@@ -1,7 +1,6 @@
 package it.smartcommunitylab.csengine.model;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
@@ -34,8 +33,6 @@ public class Experience {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate validityTo;
 	
-	private List<String> competences;
-
 	public String getId() {
 		return id;
 	}
@@ -132,12 +129,4 @@ public class Experience {
 		this.organisationId = organisationId;
 	}
 
-	public List<String> getCompetences() {
-		return competences;
-	}
-
-	public void setCompetences(List<String> competences) {
-		this.competences = competences;
-	}
-	
 }

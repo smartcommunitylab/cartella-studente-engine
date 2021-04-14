@@ -17,6 +17,7 @@ import it.smartcommunitylab.csengine.model.dto.ExamDTO;
 import it.smartcommunitylab.csengine.model.dto.ExperienceDTO;
 import it.smartcommunitylab.csengine.model.dto.OrganisationDTO;
 import it.smartcommunitylab.csengine.repository.CompetenceRepository;
+import it.smartcommunitylab.csengine.repository.ExpCompetenceRepository;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
 import it.smartcommunitylab.csengine.repository.OrganisationRepository;
 
@@ -28,6 +29,8 @@ public class GraphQLExperienceDataFetcher {
 	OrganisationRepository organisationRepository;
 	@Autowired
 	CompetenceRepository competenceRepository;
+	@Autowired
+	ExpCompetenceRepository expCompetenceRepository;
 	
 	public DataFetcher<Stream<ExamDTO>> searchExamsByPersonId() {
 		return dataFetchingEnvironment -> {
@@ -52,7 +55,8 @@ public class GraphQLExperienceDataFetcher {
 	public DataFetcher<Stream<CompetenceDTO>> getCompetences() {
 		return dataFetchingEnvironment -> {
 			ExperienceDTO exp = dataFetchingEnvironment.getSource();
-			return competenceRepository.findByUriIn(exp.getCompetences())
+			return expCompetenceRepository.findByExperienceIdAndPersonId(exp.getId(), exp.getPersonId())
+					.flatMap(expComp -> competenceRepository.findById(expComp.getCompetenceId()))
 					.map(this::getCompetenceDTO)
 					.toStream();
 		};

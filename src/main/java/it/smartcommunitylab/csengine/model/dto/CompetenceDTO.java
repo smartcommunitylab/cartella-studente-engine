@@ -15,8 +15,12 @@ public class CompetenceDTO {
 		this.id = c.getId();
 		this.uri = c.getUri();
 		this.concentType = c.getConcentType();
-		this.preferredLabel = c.getPreferredLabel().get(lang);
-		this.altLabel = c.getAltLabel().get(lang);
+		if(c.getPreferredLabel() != null) {
+			this.preferredLabel = c.getPreferredLabel().get(lang);
+		}
+		if(c.getAltLabel() != null) {
+			this.altLabel = c.getAltLabel().get(lang);	
+		}
 	}
 
 	public String getId() {

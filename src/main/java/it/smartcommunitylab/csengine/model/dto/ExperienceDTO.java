@@ -42,9 +42,6 @@ public class ExperienceDTO {
 		this.dateTo = e.getDateTo();
 		this.validityFrom = e.getValidityFrom();
 		this.validityTo = e.getValidityTo();
-		if(e.getCompetences() != null) {
-			this.competences = e.getCompetences();
-		}
 	}
 
 	public String getId() {
