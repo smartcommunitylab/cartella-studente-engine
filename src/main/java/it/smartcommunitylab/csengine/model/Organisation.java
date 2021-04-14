@@ -13,7 +13,7 @@ public class Organisation {
 	private String id;
 	private String name;
 	private String description;
-	private String address;
+	private Address address;
 	private String phone;
 	private String email;
 	private String pec;
@@ -38,12 +38,6 @@ public class Organisation {
 	}
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
 	}
 	public String getPhone() {
 		return phone;
@@ -80,6 +74,12 @@ public class Organisation {
 	}
 	public void setLocation(GeoJsonPoint location) {
 		this.location = location;
+	}
+	public Address getAddress() {
+		return address;
+	}
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 	
 	

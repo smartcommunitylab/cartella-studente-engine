@@ -1,12 +1,13 @@
 package it.smartcommunitylab.csengine.model.dto;
 
+import it.smartcommunitylab.csengine.model.Address;
 import it.smartcommunitylab.csengine.model.Organisation;
 
 public class OrganisationDTO {
 	private String id;
 	private String name;
 	private String description;
-	private String address;
+	private Address address;
 	private String phone;
 	private String email;
 	private String pec;
@@ -43,12 +44,6 @@ public class OrganisationDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
 	public String getPhone() {
 		return phone;
 	}
@@ -72,6 +67,14 @@ public class OrganisationDTO {
 	}
 	public void setFiscalCode(String fiscalCode) {
 		this.fiscalCode = fiscalCode;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 	
 }
