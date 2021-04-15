@@ -2,7 +2,9 @@ package it.smartcommunitylab.csengine.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -15,6 +17,7 @@ import com.google.common.collect.ImmutableMap;
 
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
+import it.smartcommunitylab.csengine.connector.saa.SAAExam;
 import it.smartcommunitylab.csengine.connector.saa.SAAStudent;
 import it.smartcommunitylab.csengine.model.Competence;
 import it.smartcommunitylab.csengine.model.ExpCompetence;
@@ -44,14 +47,37 @@ public class InitController {
 	
 	@GetMapping("/saa/student")
 	public SAAStudent getSAAStudent(@RequestParam String fiscalCode) {
+		String id = RandomStringUtils.randomNumeric(8);
 		SAAStudent s = new SAAStudent();
 		s.setOrigin("INFOTNISTRUZIONE");
-		s.setExtId("812912");
+		s.setExtId(id);
 		s.setCf(fiscalCode);
-		s.setName("Mario");
-		s.setSurname("Rossi");
-		s.setEmail("mario.rossi@gmail.com");
+		s.setName("Nome" + id);
+		s.setSurname("Cognome" + id);
+		s.setEmail("email" + id);
 		return s;
+	}
+	
+	@GetMapping("/saa/exam")
+	public List<SAAExam> getSAAExam(@RequestParam String fiscalCode) {
+		List<SAAExam> list = new ArrayList<SAAExam>();
+		Random random = new Random();
+		int min = 10;
+		int max = 31;
+		for(int i=0; i<3; i++) {
+			String id = fiscalCode + "_" + i;
+			int giorno = random.nextInt(max - min) + min;
+			SAAExam e = new SAAExam();
+			e.setOrigin("INFOTNISTRUZIONE");
+			e.setExtId(id);
+			e.setDateFrom("2021-04-" + giorno);
+			e.setDateTo("2021-04-" + giorno);
+			e.setQualification("qualifica" + id);
+			e.setSchoolYear("2020-21");
+			e.setType("ESAME DI STATO CONCLUSIVO DEL PRIMO CICLO");
+			list.add(e);
+		}
+		return list;
 	}
 	
 	@GetMapping("/init")
