@@ -24,13 +24,27 @@ public class ExperienceService {
 		// TODO add logic to manage connectors choice
 		return personRepository.findByFiscalCode(fiscalCode)
 				.switchIfEmpty(this.addNewPerson(fiscalCode))
-				.flatMapMany(p -> this.mergeView(p));
+				.flatMapMany(p -> this.mergeExamView(p));
 	}
 	
-	private Flux<Experience> mergeView(Person person) {
+	public Flux<Experience> refreshStage(String fiscalCode) {
+		// TODO add logic to manage connectors choice
+		return personRepository.findByFiscalCode(fiscalCode)
+				.switchIfEmpty(this.addNewPerson(fiscalCode))
+				.flatMapMany(p -> this.mergeStageView(p));
+	}
+	
+	private Flux<Experience> mergeExamView(Person person) {
 		return saaService.refreshExam(person).flatMap(e -> {
 			//TODO add logic to manage views
 			return saaService.fillExamFields(e);			
+		});
+	}
+	
+	private Flux<Experience> mergeStageView(Person person) {
+		return saaService.refreshStage(person).flatMap(e -> {
+			//TODO add logic to manage views
+			return saaService.fillStageFields(e);			
 		});
 	}
 	

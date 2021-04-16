@@ -18,6 +18,7 @@ import com.google.common.collect.ImmutableMap;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.connector.saa.SAAExam;
+import it.smartcommunitylab.csengine.connector.saa.SAAStage;
 import it.smartcommunitylab.csengine.connector.saa.SAAStudent;
 import it.smartcommunitylab.csengine.model.Competence;
 import it.smartcommunitylab.csengine.model.ExpCompetence;
@@ -44,6 +45,9 @@ public class InitController {
 	ExpCompetenceRepository expCompetenceRepository;
 	
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	Random random = new Random();
+	int min = 10;
+	int max = 31;
 	
 	@GetMapping("/saa/student")
 	public SAAStudent getSAAStudent(@RequestParam String fiscalCode) {
@@ -60,10 +64,7 @@ public class InitController {
 	
 	@GetMapping("/saa/exam")
 	public List<SAAExam> getSAAExam(@RequestParam String fiscalCode) {
-		List<SAAExam> list = new ArrayList<SAAExam>();
-		Random random = new Random();
-		int min = 10;
-		int max = 31;
+		List<SAAExam> list = new ArrayList<>();
 		for(int i=0; i<3; i++) {
 			String id = fiscalCode + "_" + i;
 			int giorno = random.nextInt(max - min) + min;
@@ -77,6 +78,24 @@ public class InitController {
 			e.setType("ESAME DI STATO CONCLUSIVO DEL PRIMO CICLO");
 			list.add(e);
 		}
+		return list;
+	}
+	
+	@GetMapping("/saa/stage")
+	public List<SAAStage> getSAAStage(@RequestParam String fiscalCode) {
+		List<SAAStage> list = new ArrayList<>();
+		SAAStage s = new SAAStage();
+		String id = fiscalCode + "_1";
+		int giorno = random.nextInt(max - min) + min;
+		s.setExtId(id);
+		s.setOrigin("INFOTNISTRUZIONE");
+		s.setDateFrom("2021-04-" + giorno);
+		s.setDateTo("2021-04-" + giorno);
+		s.setType("Terzo anno");
+		s.setTitle("3° OP. CARPENTERIA IN LEGNO - PRIMO PERIODO");
+		s.setDuration("80");
+		s.setLocation("EFFEFFE RESTAURI srl - LOCALITA' AL PONTE  38082 BORGO CHIESE (TN)");
+		list.add(s);
 		return list;
 	}
 	
@@ -105,9 +124,6 @@ public class InitController {
 		
 		expCompetenceRepository.deleteAll().block();
 		experienceRepository.deleteAll().block();
-		int min = 10;
-		int max = 31;
-		Random random = new Random();
 		for(int i = 0; i < 3; i++) {
 			Experience exp = new Experience();
 			exp.setPersonId(p.getId());

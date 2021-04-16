@@ -28,5 +28,11 @@ public class RefreshController {
 	public Flux<Experience> refreshExam(@RequestParam String fiscalCode) {
 		return experienceService.refreshExam(fiscalCode);
 	}
+	
+	@GetMapping("/stage/refresh")
+	public Flux<Experience> refreshStage(@RequestParam String fiscalCode) {
+		return experienceService.refreshStage(fiscalCode);
+	}
+
 
 }
