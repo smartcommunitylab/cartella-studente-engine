@@ -1,9 +1,9 @@
 package it.smartcommunitylab.csengine.connector;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import it.smartcommunitylab.csengine.connector.saa.SAAService;
 import it.smartcommunitylab.csengine.model.Person;
 import it.smartcommunitylab.csengine.repository.PersonRepository;
 import reactor.core.publisher.Mono;
@@ -12,8 +12,10 @@ import reactor.core.publisher.Mono;
 public class PersonService {
 	@Autowired
 	PersonRepository personRepository;
+	
 	@Autowired
-	SAAService saaService;
+	@Qualifier("saaPerson")
+	PersonConnector saaPersonConnector;
 	
 	public Mono<Person> refreshPerson(String fiscalCode) {
 		// TODO add logic to manage connectors choice
@@ -22,10 +24,10 @@ public class PersonService {
 	}
 	
 	private Mono<Person> mergeView(Person person) {
-		return saaService.refreshPerson(person.getId(), person.getFiscalCode())
+		return saaPersonConnector.refreshPerson(person)
 				.flatMap(p -> {
 					//TODO add logic to manage views
-					return saaService.fillPersonFields(p);			
+					return saaPersonConnector.fillPersonFields(p);			
 				});
 	}
 	

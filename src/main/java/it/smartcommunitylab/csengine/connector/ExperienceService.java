@@ -1,12 +1,11 @@
 package it.smartcommunitylab.csengine.connector;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import it.smartcommunitylab.csengine.connector.saa.SAAService;
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.Person;
-import it.smartcommunitylab.csengine.repository.ExperienceRepository;
 import it.smartcommunitylab.csengine.repository.PersonRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,10 +14,14 @@ import reactor.core.publisher.Mono;
 public class ExperienceService {
 	@Autowired
 	PersonRepository personRepository;
+	
 	@Autowired
-	ExperienceRepository experienceRepository;
+	@Qualifier("saaStage")
+	ExperienceConnector saaStageConnector;
+	
 	@Autowired
-	SAAService saaService;
+	@Qualifier("saaExam")	
+	ExperienceConnector saaExamConnector;
 	
 	public Flux<Experience> refreshExam(String fiscalCode) {
 		// TODO add logic to manage connectors choice
@@ -35,16 +38,16 @@ public class ExperienceService {
 	}
 	
 	private Flux<Experience> mergeExamView(Person person) {
-		return saaService.refreshExam(person).flatMap(e -> {
+		return saaExamConnector.refreshExp(person).flatMap(e -> {
 			//TODO add logic to manage views
-			return saaService.fillExamFields(e);			
+			return saaExamConnector.fillExpFields(e);			
 		});
 	}
 	
 	private Flux<Experience> mergeStageView(Person person) {
-		return saaService.refreshStage(person).flatMap(e -> {
+		return saaStageConnector.refreshExp(person).flatMap(e -> {
 			//TODO add logic to manage views
-			return saaService.fillStageFields(e);			
+			return saaStageConnector.fillExpFields(e);			
 		});
 	}
 	

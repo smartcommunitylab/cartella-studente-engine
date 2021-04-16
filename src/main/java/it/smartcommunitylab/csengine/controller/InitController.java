@@ -65,8 +65,8 @@ public class InitController {
 	@GetMapping("/saa/exam")
 	public List<SAAExam> getSAAExam(@RequestParam String fiscalCode) {
 		List<SAAExam> list = new ArrayList<>();
-		for(int i=0; i<3; i++) {
-			String id = fiscalCode + "_" + i;
+		for(int i=0; i<2; i++) {
+			String id = fiscalCode + "_exam_" + i;
 			int giorno = random.nextInt(max - min) + min;
 			SAAExam e = new SAAExam();
 			e.setOrigin("INFOTNISTRUZIONE");
@@ -85,7 +85,7 @@ public class InitController {
 	public List<SAAStage> getSAAStage(@RequestParam String fiscalCode) {
 		List<SAAStage> list = new ArrayList<>();
 		SAAStage s = new SAAStage();
-		String id = fiscalCode + "_1";
+		String id = fiscalCode + "_stage_1";
 		int giorno = random.nextInt(max - min) + min;
 		s.setExtId(id);
 		s.setOrigin("INFOTNISTRUZIONE");
