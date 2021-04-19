@@ -1,6 +1,5 @@
 package it.smartcommunitylab.csengine.model;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
@@ -19,7 +18,7 @@ public class Organisation {
 	private String pec;
 	private String fiscalCode; 
 	private GeoJsonPoint location;
-	private Map<String, DataView> views = new HashMap<>();
+	private Map<String, DataView> views;
 	
 	public String getId() {
 		return id;

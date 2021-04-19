@@ -79,7 +79,7 @@ public class SAAStageService implements ExperienceConnector {
 				(String) view.getAttributes().get("title"), "", 
 				LocalDate.parse((String) view.getAttributes().get("dateFrom"), dtf), 
 				LocalDate.parse((String) view.getAttributes().get("dateTo"), dtf), 
-				attributes);
+				null, attributes);
 	}
 
 }

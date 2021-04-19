@@ -8,6 +8,7 @@ public class SAAExam {
 	private String qualification;
 	private String schoolYear;
 	private String type;
+	private String instituteRef;
 	
 	public String getExtId() {
 		return extId;
@@ -50,5 +51,11 @@ public class SAAExam {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public String getInstituteRef() {
+		return instituteRef;
+	}
+	public void setInstituteRef(String instituteRef) {
+		this.instituteRef = instituteRef;
 	}
 }

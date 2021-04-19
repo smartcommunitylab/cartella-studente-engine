@@ -18,6 +18,7 @@ import com.google.common.collect.ImmutableMap;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.connector.saa.SAAExam;
+import it.smartcommunitylab.csengine.connector.saa.SAAInstitute;
 import it.smartcommunitylab.csengine.connector.saa.SAAStage;
 import it.smartcommunitylab.csengine.connector.saa.SAAStudent;
 import it.smartcommunitylab.csengine.model.Competence;
@@ -76,6 +77,7 @@ public class InitController {
 			e.setQualification("qualifica" + id);
 			e.setSchoolYear("2020-21");
 			e.setType("ESAME DI STATO CONCLUSIVO DEL PRIMO CICLO");
+			e.setInstituteRef("istituto1");
 			list.add(e);
 		}
 		return list;
@@ -97,6 +99,18 @@ public class InitController {
 		s.setLocation("EFFEFFE RESTAURI srl - LOCALITA' AL PONTE  38082 BORGO CHIESE (TN)");
 		list.add(s);
 		return list;
+	}
+	
+	@GetMapping("/saa/institute")
+	public SAAInstitute getSAAInstitute(@RequestParam String extId) {
+		SAAInstitute i = new SAAInstitute();
+		i.setExtId(extId);
+		i.setOrigin("INFOTNISTRUZIONE");
+		i.setName("istituto");
+		i.setAddress("indirizzo");
+		i.setEmail("email");
+		i.setPec("pec");
+		return i;
 	}
 	
 	@GetMapping("/init")

@@ -30,10 +30,11 @@ public class ExperienceRepositoryCustomImpl implements ExperienceRepositoryCusto
 
 	@Override
 	public Mono<Experience> updateFields(String expId, String title, String description, 
-			LocalDate dateFrom, LocalDate dateTo, Map<String, Object> attributes) {
+			LocalDate dateFrom, LocalDate dateTo, String organisationId, Map<String, Object> attributes) {
 		Query query = new Query(Criteria.where("id").is(expId));
 		Update update = new Update().set("title", title).set("description", description)
-				.set("dateFrom", dateFrom).set("dateTo", dateTo).set("attributes", attributes);
+				.set("dateFrom", dateFrom).set("dateTo", dateTo).set("organisationId", organisationId)
+				.set("attributes", attributes);
 		FindAndModifyOptions options = new FindAndModifyOptions();
 		options.returnNew(true);
 		options.upsert(false);		

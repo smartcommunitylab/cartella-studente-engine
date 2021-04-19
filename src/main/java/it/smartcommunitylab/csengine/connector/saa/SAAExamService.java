@@ -18,8 +18,10 @@ import it.smartcommunitylab.csengine.connector.ExperienceConnector;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.ExtRef;
+import it.smartcommunitylab.csengine.model.Organisation;
 import it.smartcommunitylab.csengine.model.Person;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
+import it.smartcommunitylab.csengine.repository.OrganisationRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -27,6 +29,11 @@ import reactor.core.publisher.Mono;
 public class SAAExamService implements ExperienceConnector {
 	@Autowired
 	ExperienceRepository experienceRepository;
+	@Autowired
+	OrganisationRepository organisationRepository;
+	
+	@Autowired
+	SAAInstituteService instituteService;
 	
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -54,6 +61,17 @@ public class SAAExamService implements ExperienceConnector {
 		exp.setPersonId(personId);
 		return experienceRepository.save(exp);
 	}
+	
+	private Mono<Organisation> addNewOrganisation(String extId, String origin) {
+		ExtRef identity = new ExtRef(extId, origin);
+		DataView dw = new DataView();
+		dw.setIdentity(identity);
+		Organisation o = new Organisation();
+		o.setViews(new HashMap<>());
+		o.getViews().put(View.SAA.label, dw);
+		Mono<Organisation> mono = organisationRepository.save(o);
+		return mono.flatMap(instituteService::refreshOrganisation);
+	}
 
 	private DataView getDataView(SAAExam e) {
 		ExtRef identity = new ExtRef(e.getExtId(), e.getOrigin());
@@ -64,6 +82,7 @@ public class SAAExamService implements ExperienceConnector {
 		view.getAttributes().put("qualification", e.getQualification());
 		view.getAttributes().put("schoolYear", e.getSchoolYear());
 		view.getAttributes().put("type", e.getType());
+		view.getAttributes().put("instituteRef", e.getInstituteRef());
 		return view;
 	}
 
@@ -73,12 +92,18 @@ public class SAAExamService implements ExperienceConnector {
 		Map<String, Object> attributes = new HashMap<>();
 		attributes.put(ExamAttr.TYPE.label, view.getAttributes().get("type"));
 		attributes.put(ExamAttr.QUALIFICATION.label, view.getAttributes().get("qualification"));
-		attributes.put(ExamAttr.RESULT.label, Boolean.TRUE);		
-		return experienceRepository.updateFields(e.getId(), 
-				(String) view.getAttributes().get("title"), "", 
-				LocalDate.parse((String) view.getAttributes().get("dateFrom"), dtf), 
-				LocalDate.parse((String) view.getAttributes().get("dateTo"), dtf), 
-				attributes);
+		attributes.put(ExamAttr.RESULT.label, Boolean.TRUE);
+		String instituteRef = (String) view.getAttributes().get("instituteRef");
+		return organisationRepository.findByExtRef(View.SAA.label, instituteRef, view.getIdentity().getOrigin())
+			.switchIfEmpty(this.addNewOrganisation(instituteRef, view.getIdentity().getOrigin()))
+			.flatMap(instituteService::fillOrganisationFields)
+			.flatMap(o -> {
+				return experienceRepository.updateFields(e.getId(), 
+						(String) view.getAttributes().get("title"), "", 
+						LocalDate.parse((String) view.getAttributes().get("dateFrom"), dtf), 
+						LocalDate.parse((String) view.getAttributes().get("dateTo"), dtf),
+						o.getId(), attributes); 				
+			});
 	}
 
 }
