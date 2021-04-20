@@ -97,7 +97,6 @@ public class SAAExamService implements ExperienceConnector {
 		String instituteRef = (String) view.getAttributes().get("instituteRef");
 		return organisationRepository.findByExtRef(View.SAA.label, instituteRef, view.getIdentity().getOrigin())
 			.switchIfEmpty(this.addNewOrganisation(instituteRef, view.getIdentity().getOrigin()))
-			.flatMap(instituteService::fillOrganisationFields)
 			.flatMap(o -> {
 				return experienceRepository.updateFields(e.getId(), 
 						(String) view.getAttributes().get("title"), "", 

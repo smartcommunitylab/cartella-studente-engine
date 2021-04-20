@@ -38,7 +38,7 @@ public class ExperienceService {
 	}
 	
 	private Flux<Experience> mergeExamView(Person person) {
-		return saaExamConnector.refreshExp(person).flatMap(e -> {
+		return saaExamConnector.refreshExp(person).flatMapSequential(e -> {
 			//TODO add logic to manage views
 			return saaExamConnector.fillExpFields(e);			
 		});

@@ -19,8 +19,6 @@ public class Experience {
 	private String description;
 	private String entityType;
 	private GeoJsonPoint location;
-	private Map<String, Object> attributes;
-	private Map<String, DataView> views;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate dateFrom;
@@ -33,7 +31,10 @@ public class Experience {
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate validityTo;
-	
+
+	private Map<String, Object> attributes;
+	private Map<String, DataView> views;
+
 	public String getId() {
 		return id;
 	}
