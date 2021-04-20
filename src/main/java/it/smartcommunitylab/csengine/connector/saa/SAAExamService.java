@@ -70,7 +70,8 @@ public class SAAExamService implements ExperienceConnector {
 		o.setViews(new HashMap<>());
 		o.getViews().put(View.SAA.label, dw);
 		Mono<Organisation> mono = organisationRepository.save(o);
-		return mono.flatMap(instituteService::refreshOrganisation);
+		return mono.flatMap(instituteService::refreshOrganisation)
+				.flatMap(instituteService::fillOrganisationFields);
 	}
 
 	private DataView getDataView(SAAExam e) {

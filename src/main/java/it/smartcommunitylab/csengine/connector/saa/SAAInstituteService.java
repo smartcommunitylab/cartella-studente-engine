@@ -39,8 +39,11 @@ public class SAAInstituteService implements OrganisationConnector {
 	
 	@Override
 	public Mono<Organisation> fillOrganisationFields(Organisation o) {
-		// TODO Auto-generated method stub
-		return null;
+		DataView view = o.getViews().get(View.SAA.label);
+		return organisationRepository.updateFields(o.getId(), 
+				(String) view.getAttributes().get("name"), 
+				null, 
+				(String) view.getAttributes().get("email"));
 	}
 	
 	private DataView getDataView(SAAInstitute i) {
