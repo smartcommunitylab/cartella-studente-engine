@@ -5,8 +5,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import it.smartcommunitylab.csengine.model.Experience;
-
 public class ExperienceDTO {
 	private String id;
 	private String personId;
@@ -28,21 +26,6 @@ public class ExperienceDTO {
 	private LocalDate validityTo;
 	
 	private List<String> competences;
-
-	public ExperienceDTO() {}
-	
-	public ExperienceDTO(Experience e) {
-		this.id = e.getId();
-		this.personId = e.getPersonId();
-		this.organisationId = e.getOrganisationId();
-		this.title = e.getTitle();
-		this.description = e.getDescription();
-		this.entityType = e.getEntityType();
-		this.dateFrom = e.getDateFrom();
-		this.dateTo = e.getDateTo();
-		this.validityFrom = e.getValidityFrom();
-		this.validityTo = e.getValidityTo();
-	}
 
 	public String getId() {
 		return id;

@@ -1,7 +1,5 @@
 package it.smartcommunitylab.csengine.model.dto;
 
-import it.smartcommunitylab.csengine.model.Experience;
-
 public class ExamDTO extends ExperienceDTO {
 	private String type;
 	private String qualification;
@@ -9,12 +7,6 @@ public class ExamDTO extends ExperienceDTO {
 	private String grade;
 	private Boolean result;
 	private Boolean externalCandidate;
-	
-	public ExamDTO() {}
-	
-	public ExamDTO(Experience e) {
-		super(e);
-	}
 	
 	public String getType() {
 		return type;

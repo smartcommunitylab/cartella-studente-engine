@@ -1,12 +1,12 @@
 package it.smartcommunitylab.csengine.common;
 
 public enum ExamAttr {
-	TYPE("type"),
-	QUALIFICATION("qualification"),
-	HONOUR("honour"),
-	GRADE("grade"),
-	RESULT("result"),
-	EXTCANDIDATE("externalCandidate");
+	type("type"),
+	qualification("qualification"),
+	honour("honour"),
+	grade("grade"),
+	result("result"),
+	externalCandidate("externalCandidate");
 	
 	public final String label;
 	

@@ -44,7 +44,7 @@ public class SAAStageService implements ExperienceConnector {
 
 	private Mono<Experience> updateStage(String personId, SAAStage s) {
 		return experienceRepository.findByExtRef(View.SAA.label, s.getExtId(), s.getOrigin())
-		.switchIfEmpty(this.addNewExperience(personId, EntityType.STAGE))
+		.switchIfEmpty(this.addNewExperience(personId, EntityType.stage))
 		.flatMap(stage -> experienceRepository.updateView(stage.getId(), View.SAA.label, getDataView(s)));
 	}
 	
@@ -72,9 +72,9 @@ public class SAAStageService implements ExperienceConnector {
 	public Mono<Experience> fillExpFields(Experience e) {
 		DataView view = e.getViews().get(View.SAA.label);
 		Map<String, Object> attributes = new HashMap<>();
-		attributes.put(StageAttr.TYPE.label, view.getAttributes().get("type"));
-		attributes.put(StageAttr.DURATION.label, view.getAttributes().get("duration"));
-		attributes.put(StageAttr.LOCATION.label, view.getAttributes().get("location"));		
+		attributes.put(StageAttr.type.label, view.getAttributes().get("type"));
+		attributes.put(StageAttr.duration.label, view.getAttributes().get("duration"));
+		attributes.put(StageAttr.location.label, view.getAttributes().get("location"));		
 		return experienceRepository.updateFields(e.getId(), 
 				(String) view.getAttributes().get("title"), "", 
 				LocalDate.parse((String) view.getAttributes().get("dateFrom"), dtf), 

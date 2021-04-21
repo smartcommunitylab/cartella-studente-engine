@@ -1,9 +1,6 @@
 package it.smartcommunitylab.csengine.connector.saa;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,15 +10,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
+import it.smartcommunitylab.csengine.common.ExpAttr;
 import it.smartcommunitylab.csengine.common.View;
 import it.smartcommunitylab.csengine.connector.ExperienceConnector;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.ExtRef;
-import it.smartcommunitylab.csengine.model.Organisation;
 import it.smartcommunitylab.csengine.model.Person;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
-import it.smartcommunitylab.csengine.repository.OrganisationRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -29,8 +25,6 @@ import reactor.core.publisher.Mono;
 public class SAAExamService implements ExperienceConnector {
 	@Autowired
 	ExperienceRepository experienceRepository;
-	@Autowired
-	OrganisationRepository organisationRepository;
 	
 	@Autowired
 	SAAInstituteService instituteService;
@@ -43,37 +37,25 @@ public class SAAExamService implements ExperienceConnector {
 		return client.get().uri("/saa/exam?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
 				.exchangeToFlux(response -> {
 					if (response.statusCode().equals(HttpStatus.OK)) {
-						return response.bodyToFlux(SAAExam.class).flatMap(e -> this.updateExam(person.getId(), e));
+						return response.bodyToFlux(SAAExam.class).flatMap(e -> this.getExam(person.getId(), e));
 					}
 					return Flux.empty();
 				});		
 	}
 
-	private Mono<Experience> updateExam(String personId, SAAExam e) {
-		return experienceRepository.findByExtRef(View.SAA.label, e.getExtId(), e.getOrigin())
-		.switchIfEmpty(this.addNewExperience(personId, EntityType.EXAM))
-		.flatMap(exp -> experienceRepository.updateView(exp.getId(), View.SAA.label, getDataView(e)));
-	}
-	
-	private Mono<Experience> addNewExperience(String personId, EntityType type) {
+	private Mono<Experience> getExam(String personId, SAAExam e) {
 		Experience exp = new Experience();
-		exp.setEntityType(type.label);
 		exp.setPersonId(personId);
-		return experienceRepository.save(exp);
+		exp.setEntityType(EntityType.exam.label);
+		exp.getViews().put(EntityType.exp.label, getExpDataView(e));
+		exp.getViews().put(EntityType.exam.label, getExamDataView(e));
+		exp.getViews().put(View.SAA.label, getDataView(e));
+		return Mono.just(exp);
+//		return experienceRepository.findByExtRef(View.SAA.label, e.getExtId(), e.getOrigin())
+//		.switchIfEmpty(this.addNewExperience(personId, EntityType.exam))
+//		.flatMap(exp -> experienceRepository.updateView(exp.getId(), View.SAA.label, getDataView(e)));
 	}
 	
-	private Mono<Organisation> addNewOrganisation(String extId, String origin) {
-		ExtRef identity = new ExtRef(extId, origin);
-		DataView dw = new DataView();
-		dw.setIdentity(identity);
-		Organisation o = new Organisation();
-		o.setViews(new HashMap<>());
-		o.getViews().put(View.SAA.label, dw);
-		Mono<Organisation> mono = organisationRepository.save(o);
-		return mono.flatMap(instituteService::refreshOrganisation)
-				.flatMap(instituteService::fillOrganisationFields);
-	}
-
 	private DataView getDataView(SAAExam e) {
 		ExtRef identity = new ExtRef(e.getExtId(), e.getOrigin());
 		DataView view = new DataView();
@@ -86,24 +68,26 @@ public class SAAExamService implements ExperienceConnector {
 		view.getAttributes().put("instituteRef", e.getInstituteRef());
 		return view;
 	}
+	
+	private DataView getExamDataView(SAAExam e) {
+		DataView view = new DataView();
+		view.getAttributes().put(ExamAttr.qualification.label, e.getQualification());
+		view.getAttributes().put(ExamAttr.type.label, e.getType());
+		return view;
+	}
+
+	private DataView getExpDataView(SAAExam e) {
+		DataView view = new DataView();
+		view.getAttributes().put(ExpAttr.dateFrom.label, e.getDateFrom());
+		view.getAttributes().put(ExpAttr.dateTo.label, e.getDateTo());
+		view.getAttributes().put(ExpAttr.title.label, e.getType());
+		return view;
+	}
 
 	@Override
 	public Mono<Experience> fillExpFields(Experience e) {
-		DataView view = e.getViews().get(View.SAA.label);
-		Map<String, Object> attributes = new HashMap<>();
-		attributes.put(ExamAttr.TYPE.label, view.getAttributes().get("type"));
-		attributes.put(ExamAttr.QUALIFICATION.label, view.getAttributes().get("qualification"));
-		attributes.put(ExamAttr.RESULT.label, Boolean.TRUE);
-		String instituteRef = (String) view.getAttributes().get("instituteRef");
-		return organisationRepository.findByExtRef(View.SAA.label, instituteRef, view.getIdentity().getOrigin())
-			.switchIfEmpty(this.addNewOrganisation(instituteRef, view.getIdentity().getOrigin()))
-			.flatMap(o -> {
-				return experienceRepository.updateFields(e.getId(), 
-						(String) view.getAttributes().get("title"), "", 
-						LocalDate.parse((String) view.getAttributes().get("dateFrom"), dtf), 
-						LocalDate.parse((String) view.getAttributes().get("dateTo"), dtf),
-						o.getId(), attributes); 				
-			});
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

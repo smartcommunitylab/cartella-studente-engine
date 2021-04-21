@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.Person;
+import it.smartcommunitylab.csengine.repository.ExperienceRepository;
 import it.smartcommunitylab.csengine.repository.PersonRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -14,6 +15,9 @@ import reactor.core.publisher.Mono;
 public class ExperienceService {
 	@Autowired
 	PersonRepository personRepository;
+	@Autowired
+	ExperienceRepository experienceRepository;
+	
 	
 	@Autowired
 	@Qualifier("saaStage")
@@ -24,10 +28,17 @@ public class ExperienceService {
 	ExperienceConnector saaExamConnector;
 	
 	public Flux<Experience> refreshExam(String fiscalCode) {
-		// TODO add logic to manage connectors choice
 		return personRepository.findByFiscalCode(fiscalCode)
 				.switchIfEmpty(this.addNewPerson(fiscalCode))
 				.flatMapMany(p -> this.mergeExamView(p));
+	}
+	
+	private Flux<Experience> mergeExamView(Person person) {
+		// TODO add logic to manage connectors choice
+		return saaExamConnector.refreshExp(person).flatMapSequential(e -> {
+			//TODO add logic to manage views
+			return experienceRepository.save(e);
+		});
 	}
 	
 	public Flux<Experience> refreshStage(String fiscalCode) {
@@ -37,12 +48,6 @@ public class ExperienceService {
 				.flatMapMany(p -> this.mergeStageView(p));
 	}
 	
-	private Flux<Experience> mergeExamView(Person person) {
-		return saaExamConnector.refreshExp(person).flatMapSequential(e -> {
-			//TODO add logic to manage views
-			return saaExamConnector.fillExpFields(e);			
-		});
-	}
 	
 	private Flux<Experience> mergeStageView(Person person) {
 		return saaStageConnector.refreshExp(person).flatMap(e -> {

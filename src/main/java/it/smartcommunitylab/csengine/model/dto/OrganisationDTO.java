@@ -1,7 +1,6 @@
 package it.smartcommunitylab.csengine.model.dto;
 
 import it.smartcommunitylab.csengine.model.Address;
-import it.smartcommunitylab.csengine.model.Organisation;
 
 public class OrganisationDTO {
 	private String id;
@@ -12,19 +11,6 @@ public class OrganisationDTO {
 	private String email;
 	private String pec;
 	private String fiscalCode; 
-	
-	public OrganisationDTO() {}
-	
-	public OrganisationDTO(Organisation o) {
-		this.id = o.getId();
-		this.name = o.getName();
-		this.description = o.getDescription();
-		this.address = o.getAddress();
-		this.phone = o.getPhone();
-		this.email = o.getEmail();
-		this.pec = o.getPec();
-		this.fiscalCode = o.getFiscalCode();
-	}
 	
 	public String getId() {
 		return id;

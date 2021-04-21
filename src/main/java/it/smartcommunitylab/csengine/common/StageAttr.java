@@ -1,9 +1,9 @@
 package it.smartcommunitylab.csengine.common;
 
 public enum StageAttr {
-	TYPE("type"),
-	DURATION("duration"),
-	LOCATION("location");
+	type("type"),
+	duration("duration"),
+	location("location");
 	
 	public final String label;
 	
