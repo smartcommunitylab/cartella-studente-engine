@@ -1,9 +1,9 @@
-package it.smartcommunitylab.csengine.model;
+package it.smartcommunitylab.csengine.connector.saa;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Competence {
+public class SAACompetence {
 	private String uri;
 	private String concentType;
 	private Map<String, String> preferredLabel = new HashMap<>();

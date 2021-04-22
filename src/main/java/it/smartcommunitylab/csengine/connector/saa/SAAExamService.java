@@ -1,6 +1,10 @@
 package it.smartcommunitylab.csengine.connector.saa;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import it.smartcommunitylab.csengine.common.CompetenceAttr;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.common.ExpAttr;
@@ -18,6 +23,7 @@ import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.ExtRef;
 import it.smartcommunitylab.csengine.model.Person;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
+import it.smartcommunitylab.csengine.util.Utils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -51,9 +57,6 @@ public class SAAExamService implements ExperienceConnector {
 		exp.getViews().put(EntityType.exam.label, getExamDataView(e));
 		exp.getViews().put(View.SAA.label, getDataView(e));
 		return Mono.just(exp);
-//		return experienceRepository.findByExtRef(View.SAA.label, e.getExtId(), e.getOrigin())
-//		.switchIfEmpty(this.addNewExperience(personId, EntityType.exam))
-//		.flatMap(exp -> experienceRepository.updateView(exp.getId(), View.SAA.label, getDataView(e)));
 	}
 	
 	private DataView getDataView(SAAExam e) {
@@ -81,8 +84,28 @@ public class SAAExamService implements ExperienceConnector {
 		view.getAttributes().put(ExpAttr.dateFrom.label, e.getDateFrom());
 		view.getAttributes().put(ExpAttr.dateTo.label, e.getDateTo());
 		view.getAttributes().put(ExpAttr.title.label, e.getType());
-		view.getAttributes().put(ExpAttr.competences.label, e.getCompetences());
+		if(e.getCompetences() != null) {
+			List<Map<String, Object>> list = new ArrayList<>();
+			e.getCompetences().forEach(c -> {
+				list.add(getCompetence(c));
+			});
+			view.getAttributes().put(ExpAttr.competences.label, list);
+		}
+		if(Utils.isNotEmpty(e.getInstituteRef())) {
+			//DataView inst = instituteService.refreshOrganisation(e.getInstituteRef()).block();
+			//view.getAttributes().put(ExpAttr.organisation.label, inst);
+		}
+		
 		return view;
+	}
+
+	private Map<String, Object> getCompetence(SAACompetence c) {
+		Map<String, Object> map = new HashMap<>();
+		map.put(CompetenceAttr.uri.label, c.getUri());
+		map.put(CompetenceAttr.concentType.label, c.getConcentType());
+		map.put(CompetenceAttr.preferredLabel.label, c.getPreferredLabel());
+		map.put(CompetenceAttr.altLabel.label, c.getAltLabel());
+		return map;
 	}
 
 	@Override

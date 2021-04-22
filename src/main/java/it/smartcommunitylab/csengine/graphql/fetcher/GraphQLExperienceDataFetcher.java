@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.schema.DataFetcher;
+import it.smartcommunitylab.csengine.common.CompetenceAttr;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.common.ExpAttr;
-import it.smartcommunitylab.csengine.model.Competence;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.dto.CompetenceDTO;
@@ -20,7 +20,9 @@ import it.smartcommunitylab.csengine.model.dto.ExamDTO;
 import it.smartcommunitylab.csengine.model.dto.ExperienceDTO;
 import it.smartcommunitylab.csengine.model.dto.OrganisationDTO;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
+import it.smartcommunitylab.csengine.util.Utils;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Component
 public class GraphQLExperienceDataFetcher {
@@ -39,7 +41,7 @@ public class GraphQLExperienceDataFetcher {
 	public DataFetcher<OrganisationDTO> getOrganization() {
 		return dataFetchingEnvironment -> {
 			ExperienceDTO exp = dataFetchingEnvironment.getSource();
-			return experienceRepository.findById(exp.getId()).map(this::getOrganisationDTO).block();
+			return experienceRepository.findById(exp.getId()).flatMap(this::getOrganisationDTO).block();
 		};
 	}
 	
@@ -75,15 +77,15 @@ public class GraphQLExperienceDataFetcher {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private OrganisationDTO getOrganisationDTO(Experience e) {
-		if(e.getViews().containsKey(EntityType.exam.label)) {
-			DataView view = e.getViews().get(EntityType.exam.label);
+	private Mono<OrganisationDTO> getOrganisationDTO(Experience e) {
+		if(e.getViews().containsKey(EntityType.exp.label)) {
+			DataView view = e.getViews().get(EntityType.exp.label);
 			if(view.getAttributes().containsKey(ExpAttr.organisation.label)) {
 				Map<String, Object> organisationView = (Map<String, Object>) view.getAttributes().get(ExpAttr.organisation.label);
-				return this.getOrganisationDTO(organisationView);
+				return Mono.just(getOrganisationDTO(organisationView));
 			}
 		}
-		return null;
+		return Mono.empty();
 	}
 	
 	private OrganisationDTO getOrganisationDTO(Map<String, Object> view) {
@@ -97,18 +99,19 @@ public class GraphQLExperienceDataFetcher {
 		List<CompetenceDTO> list = new ArrayList<>();
 		DataView view = e.getViews().get(EntityType.exp.label);
 		if(view.getAttributes().containsKey(ExpAttr.competences.label)) {
-			List<Competence> compList = (List<Competence>) view.getAttributes().get(ExpAttr.competences.label);
-			compList.forEach(c -> list.add(getCompetenceDTO(c, "it")));
+			List<Map<String, Object>> compList = (List<Map<String, Object>>) view.getAttributes().get(ExpAttr.competences.label);
+			compList.forEach(map -> list.add(getCompetenceDTO(map, "it")));
 		}
 		return Flux.fromIterable(list);
 	}
 	
-	private CompetenceDTO getCompetenceDTO(Competence c, String lang) {
+	@SuppressWarnings("unchecked")
+	private CompetenceDTO getCompetenceDTO(Map<String, Object> map, String lang) {
 		CompetenceDTO dto = new CompetenceDTO();
-		dto.setUri(c.getUri());
-		dto.setConcentType(c.getConcentType());
-		dto.setPreferredLabel(c.getPreferredLabel().get(lang));
-		dto.setAltLabel(c.getAltLabel().get(lang));
+		dto.setUri((String) map.get(CompetenceAttr.uri.label));
+		dto.setConcentType((String) map.get(CompetenceAttr.concentType.label));
+		dto.setPreferredLabel(Utils.getLabel((Map<String, String>) map.get(CompetenceAttr.preferredLabel.label), lang));
+		dto.setAltLabel(Utils.getLabel((Map<String, String>) map.get(CompetenceAttr.altLabel.label), lang));
 		return dto;
 	}
 	

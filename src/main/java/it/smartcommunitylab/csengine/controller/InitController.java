@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.smartcommunitylab.csengine.connector.saa.SAACompetence;
 import it.smartcommunitylab.csengine.connector.saa.SAAExam;
 import it.smartcommunitylab.csengine.connector.saa.SAAInstitute;
 import it.smartcommunitylab.csengine.connector.saa.SAAStage;
 import it.smartcommunitylab.csengine.connector.saa.SAAStudent;
-import it.smartcommunitylab.csengine.model.Competence;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
 import it.smartcommunitylab.csengine.repository.PersonRepository;
 
@@ -59,7 +59,7 @@ public class InitController {
 			e.setSchoolYear("2020-21");
 			e.setType("ESAME DI STATO CONCLUSIVO DEL PRIMO CICLO");
 			e.setInstituteRef("istituto1");
-			Competence comp = new Competence();
+			SAACompetence comp = new SAACompetence();
 			comp.setUri("http://data.europa.eu/esco/skill/09638218-695c-44c7-bac3-26b45a2ae418");
 			comp.setConcentType("KnowledgeSkillCompetence");
 			comp.getPreferredLabel().put("it", "svolgere i patch test");
