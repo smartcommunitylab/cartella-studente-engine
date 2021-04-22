@@ -1,9 +1,7 @@
 package it.smartcommunitylab.csengine.model.dto;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ExperienceDTO {
 	private String id;
@@ -11,21 +9,12 @@ public class ExperienceDTO {
 	private String organisationId;
 	private String title;
 	private String description;
-	private String entityType;
-		
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate dateFrom;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate dateTo;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate validityFrom;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate validityTo;
-	
-	private List<String> competences;
+	private String entityType;		
+	private String dateFrom;
+	private String dateTo;
+	private String validityFrom;
+	private String validityTo;
+	private List<CompetenceDTO> competences = new ArrayList<>();
 
 	public String getId() {
 		return id;
@@ -49,38 +38,6 @@ public class ExperienceDTO {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public LocalDate getDateFrom() {
-		return dateFrom;
-	}
-
-	public void setDateFrom(LocalDate dateFrom) {
-		this.dateFrom = dateFrom;
-	}
-
-	public LocalDate getDateTo() {
-		return dateTo;
-	}
-
-	public void setDateTo(LocalDate dateTo) {
-		this.dateTo = dateTo;
-	}
-
-	public LocalDate getValidityFrom() {
-		return validityFrom;
-	}
-
-	public void setValidityFrom(LocalDate validityFrom) {
-		this.validityFrom = validityFrom;
-	}
-
-	public LocalDate getValidityTo() {
-		return validityTo;
-	}
-
-	public void setValidityTo(LocalDate validityTo) {
-		this.validityTo = validityTo;
 	}
 
 	public String getEntityType() {
@@ -107,11 +64,43 @@ public class ExperienceDTO {
 		this.organisationId = organisationId;
 	}
 
-	public List<String> getCompetences() {
+	public String getDateFrom() {
+		return dateFrom;
+	}
+
+	public void setDateFrom(String dateFrom) {
+		this.dateFrom = dateFrom;
+	}
+
+	public String getDateTo() {
+		return dateTo;
+	}
+
+	public void setDateTo(String dateTo) {
+		this.dateTo = dateTo;
+	}
+
+	public String getValidityFrom() {
+		return validityFrom;
+	}
+
+	public void setValidityFrom(String validityFrom) {
+		this.validityFrom = validityFrom;
+	}
+
+	public String getValidityTo() {
+		return validityTo;
+	}
+
+	public void setValidityTo(String validityTo) {
+		this.validityTo = validityTo;
+	}
+
+	public List<CompetenceDTO> getCompetences() {
 		return competences;
 	}
 
-	public void setCompetences(List<String> competences) {
+	public void setCompetences(List<CompetenceDTO> competences) {
 		this.competences = competences;
 	}
 

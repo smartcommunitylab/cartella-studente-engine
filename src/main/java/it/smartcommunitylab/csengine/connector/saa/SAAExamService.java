@@ -81,6 +81,7 @@ public class SAAExamService implements ExperienceConnector {
 		view.getAttributes().put(ExpAttr.dateFrom.label, e.getDateFrom());
 		view.getAttributes().put(ExpAttr.dateTo.label, e.getDateTo());
 		view.getAttributes().put(ExpAttr.title.label, e.getType());
+		view.getAttributes().put(ExpAttr.competences.label, e.getCompetences());
 		return view;
 	}
 

@@ -12,6 +12,7 @@ import graphql.schema.DataFetcher;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.common.ExpAttr;
+import it.smartcommunitylab.csengine.model.Competence;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.dto.CompetenceDTO;
@@ -55,10 +56,10 @@ public class GraphQLExperienceDataFetcher {
 		DataView expView = e.getViews().get(EntityType.exp.label);
 		
 		if(expView != null) {
-			dto.setId((String) expView.getAttributes().get(ExpAttr.id.label));
-			dto.setId((String) expView.getAttributes().get(ExpAttr.title.label));
-			dto.setId((String) expView.getAttributes().get(ExpAttr.dateFrom.label));
-			dto.setId((String) expView.getAttributes().get(ExpAttr.dateTo.label));
+			dto.setId(e.getId());
+			dto.setTitle((String) expView.getAttributes().get(ExpAttr.title.label));
+			dto.setDateFrom((String) expView.getAttributes().get(ExpAttr.dateFrom.label));
+			dto.setDateTo((String) expView.getAttributes().get(ExpAttr.dateTo.label));
 		}
 		
 		if(examView != null) {
@@ -91,14 +92,24 @@ public class GraphQLExperienceDataFetcher {
 		return dto;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private Flux<CompetenceDTO> getCompetenceDTO(Experience e) {
 		List<CompetenceDTO> list = new ArrayList<>();
+		DataView view = e.getViews().get(EntityType.exp.label);
+		if(view.getAttributes().containsKey(ExpAttr.competences.label)) {
+			List<Competence> compList = (List<Competence>) view.getAttributes().get(ExpAttr.competences.label);
+			compList.forEach(c -> list.add(getCompetenceDTO(c, "it")));
+		}
 		return Flux.fromIterable(list);
 	}
 	
-	private CompetenceDTO getCompetenceDTO(Map<String, Object> view) {
+	private CompetenceDTO getCompetenceDTO(Competence c, String lang) {
 		CompetenceDTO dto = new CompetenceDTO();
-		return dto;		
+		dto.setUri(c.getUri());
+		dto.setConcentType(c.getConcentType());
+		dto.setPreferredLabel(c.getPreferredLabel().get(lang));
+		dto.setAltLabel(c.getAltLabel().get(lang));
+		return dto;
 	}
-
+	
 }

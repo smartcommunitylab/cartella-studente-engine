@@ -1,5 +1,10 @@
 package it.smartcommunitylab.csengine.connector.saa;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import it.smartcommunitylab.csengine.model.Competence;
+
 public class SAAExam {
 	private String extId;
 	private String origin;
@@ -9,6 +14,7 @@ public class SAAExam {
 	private String schoolYear;
 	private String type;
 	private String instituteRef;
+	private List<Competence> competences = new ArrayList<>();
 	
 	public String getExtId() {
 		return extId;
@@ -57,5 +63,11 @@ public class SAAExam {
 	}
 	public void setInstituteRef(String instituteRef) {
 		this.instituteRef = instituteRef;
+	}
+	public List<Competence> getCompetences() {
+		return competences;
+	}
+	public void setCompetences(List<Competence> competences) {
+		this.competences = competences;
 	}
 }

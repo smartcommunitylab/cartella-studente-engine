@@ -41,7 +41,6 @@ type Organisation {
 }
 
 type Competence {
-	id: ID
 	uri: String
 	concentType: String
 	preferredLabel: String
