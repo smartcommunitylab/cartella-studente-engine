@@ -13,7 +13,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.StageAttr;
-import it.smartcommunitylab.csengine.common.View;
 import it.smartcommunitylab.csengine.connector.ExperienceConnector;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
@@ -23,11 +22,12 @@ import it.smartcommunitylab.csengine.repository.ExperienceRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Component(value="saaStage")
+@Component
 public class SAAStageService implements ExperienceConnector {
 	@Autowired
 	ExperienceRepository experienceRepository;
 	
+	String viewName;
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	@Override
@@ -43,9 +43,9 @@ public class SAAStageService implements ExperienceConnector {
 	}
 
 	private Mono<Experience> updateStage(String personId, SAAStage s) {
-		return experienceRepository.findByExtRef(View.SAA.label, s.getExtId(), s.getOrigin())
+		return experienceRepository.findByExtRef(viewName, s.getExtId(), s.getOrigin())
 		.switchIfEmpty(this.addNewExperience(personId, EntityType.stage))
-		.flatMap(stage -> experienceRepository.updateView(stage.getId(), View.SAA.label, getDataView(s)));
+		.flatMap(stage -> experienceRepository.updateView(stage.getId(), viewName, getDataView(s)));
 	}
 	
 	private Mono<Experience> addNewExperience(String personId, EntityType type) {
@@ -70,7 +70,7 @@ public class SAAStageService implements ExperienceConnector {
 
 	@Override
 	public Mono<Experience> fillExpFields(Experience e) {
-		DataView view = e.getViews().get(View.SAA.label);
+		DataView view = e.getViews().get(viewName);
 		Map<String, Object> attributes = new HashMap<>();
 		attributes.put(StageAttr.type.label, view.getAttributes().get("type"));
 		attributes.put(StageAttr.duration.label, view.getAttributes().get("duration"));
@@ -80,6 +80,11 @@ public class SAAStageService implements ExperienceConnector {
 				LocalDate.parse((String) view.getAttributes().get("dateFrom"), dtf), 
 				LocalDate.parse((String) view.getAttributes().get("dateTo"), dtf), 
 				null, attributes);
+	}
+
+	@Override
+	public void setView(String view) {
+		this.viewName = view;
 	}
 
 }

@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import it.smartcommunitylab.csengine.common.View;
 import it.smartcommunitylab.csengine.connector.PersonConnector;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.ExtRef;
@@ -16,11 +15,12 @@ import it.smartcommunitylab.csengine.model.Person;
 import it.smartcommunitylab.csengine.repository.PersonRepository;
 import reactor.core.publisher.Mono;
 
-@Component(value="saaPerson")
+@Component("saaPerson")
 public class SAAPersonService implements PersonConnector {
 	@Autowired
 	PersonRepository personRepository;
 	
+	String viewName;
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	@Override
@@ -30,7 +30,7 @@ public class SAAPersonService implements PersonConnector {
 				.exchangeToMono(response -> {
 					if (response.statusCode().equals(HttpStatus.OK)) {
 						return response.bodyToMono(SAAStudent.class).flatMap(s -> {
-							return personRepository.updateView(person.getId(), View.SAA.label, getDataView(s));
+							return personRepository.updateView(person.getId(), viewName, getDataView(s));
 						});
 					}
 					return Mono.empty();
@@ -54,11 +54,16 @@ public class SAAPersonService implements PersonConnector {
 	
 	@Override
 	public Mono<Person> fillPersonFields(Person p) {
-		DataView view = p.getViews().get(View.SAA.label);
+		DataView view = p.getViews().get(viewName);
 		return personRepository.updateFields(p.getId(), 
 				(String) view.getAttributes().get("name"), 
 				(String) view.getAttributes().get("surname"), 
 				(String) view.getAttributes().get("cf"));
+	}
+
+	@Override
+	public void setView(String view) {
+		this.viewName = view;
 	}
 	
 }

@@ -16,7 +16,6 @@ import it.smartcommunitylab.csengine.common.CompetenceAttr;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.common.ExpAttr;
-import it.smartcommunitylab.csengine.common.View;
 import it.smartcommunitylab.csengine.connector.ExperienceConnector;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
@@ -27,7 +26,7 @@ import it.smartcommunitylab.csengine.util.Utils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Component(value="saaExam")
+@Component("saaExam")
 public class SAAExamService implements ExperienceConnector {
 	@Autowired
 	ExperienceRepository experienceRepository;
@@ -35,6 +34,7 @@ public class SAAExamService implements ExperienceConnector {
 	@Autowired
 	SAAInstituteService instituteService;
 	
+	String viewName;
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	@Override
@@ -54,7 +54,7 @@ public class SAAExamService implements ExperienceConnector {
 		exp.setPersonId(personId);
 		exp.setEntityType(EntityType.exam.label);
 		exp.getViews().put(EntityType.exam.label, getExamDataView(e));
-		exp.getViews().put(View.SAA.label, getDataView(e));
+		exp.getViews().put(viewName, getDataView(e));
 		return getExpDataView(e).flatMap(view -> {
 			exp.getViews().put(EntityType.exp.label, view);
 			return Mono.just(exp);
@@ -115,6 +115,11 @@ public class SAAExamService implements ExperienceConnector {
 	public Mono<Experience> fillExpFields(Experience e) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setView(String view) {
+		this.viewName = view;
 	}
 
 }

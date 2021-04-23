@@ -1,0 +1,11 @@
+[
+{
+	"entityType": "exam",
+	"view": "saa_1",
+	"priority": 1,
+	"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAExamService",
+	"identityMap": {
+		"edit_1.attributes.extId": "saa_1.identity.extUri"
+	}
+}
+]
