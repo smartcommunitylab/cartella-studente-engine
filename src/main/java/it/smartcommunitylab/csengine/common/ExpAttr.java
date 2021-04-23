@@ -9,8 +9,8 @@ public enum ExpAttr {
 	dateTo("dateTo"),
 	validityFrom("validityFrom"),
 	validityTo("validityTo"),
-	competences("competences"), //List<Compatence>
-	organisation("organisation"); //Organisation
+	competences("competences"), //List<Compatence_attr>
+	organisation("organisation"); //Organisation_attr
 	
 	public final String label;
 	

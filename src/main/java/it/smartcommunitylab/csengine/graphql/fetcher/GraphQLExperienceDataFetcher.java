@@ -13,6 +13,8 @@ import it.smartcommunitylab.csengine.common.CompetenceAttr;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.common.ExpAttr;
+import it.smartcommunitylab.csengine.common.OrganisationAttr;
+import it.smartcommunitylab.csengine.model.Address;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.dto.CompetenceDTO;
@@ -38,10 +40,17 @@ public class GraphQLExperienceDataFetcher {
 		};
 	}
 	
-	public DataFetcher<OrganisationDTO> getOrganization() {
+	public DataFetcher<OrganisationDTO> getOrganisation() {
 		return dataFetchingEnvironment -> {
 			ExperienceDTO exp = dataFetchingEnvironment.getSource();
 			return experienceRepository.findById(exp.getId()).flatMap(this::getOrganisationDTO).block();
+		};
+	}
+	
+	public DataFetcher<Address> getOrganisationAddress() {
+		return dataFetchingEnvironment -> {
+			OrganisationDTO org = dataFetchingEnvironment.getSource();
+			return org.getAddress();
 		};
 	}
 	
@@ -90,7 +99,11 @@ public class GraphQLExperienceDataFetcher {
 	
 	private OrganisationDTO getOrganisationDTO(Map<String, Object> view) {
 		OrganisationDTO dto = new OrganisationDTO();
-		//TODO convert view to dto
+		dto.setFiscalCode((String) view.get(OrganisationAttr.fiscalCode.label));
+		dto.setName((String) view.get(OrganisationAttr.name.label));
+		dto.setEmail((String) view.get(OrganisationAttr.email.label));
+		dto.setPec((String) view.get(OrganisationAttr.pec.label));
+		dto.setAddress((Address) view.get(OrganisationAttr.address.label));
 		return dto;
 	}
 	

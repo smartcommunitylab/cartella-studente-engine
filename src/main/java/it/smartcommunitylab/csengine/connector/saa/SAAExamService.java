@@ -53,10 +53,12 @@ public class SAAExamService implements ExperienceConnector {
 		Experience exp = new Experience();
 		exp.setPersonId(personId);
 		exp.setEntityType(EntityType.exam.label);
-		exp.getViews().put(EntityType.exp.label, getExpDataView(e));
 		exp.getViews().put(EntityType.exam.label, getExamDataView(e));
 		exp.getViews().put(View.SAA.label, getDataView(e));
-		return Mono.just(exp);
+		return getExpDataView(e).flatMap(view -> {
+			exp.getViews().put(EntityType.exp.label, view);
+			return Mono.just(exp);
+		});		
 	}
 	
 	private DataView getDataView(SAAExam e) {
@@ -79,7 +81,7 @@ public class SAAExamService implements ExperienceConnector {
 		return view;
 	}
 
-	private DataView getExpDataView(SAAExam e) {
+	private Mono<DataView> getExpDataView(SAAExam e) {
 		DataView view = new DataView();
 		view.getAttributes().put(ExpAttr.dateFrom.label, e.getDateFrom());
 		view.getAttributes().put(ExpAttr.dateTo.label, e.getDateTo());
@@ -92,11 +94,12 @@ public class SAAExamService implements ExperienceConnector {
 			view.getAttributes().put(ExpAttr.competences.label, list);
 		}
 		if(Utils.isNotEmpty(e.getInstituteRef())) {
-			//DataView inst = instituteService.refreshOrganisation(e.getInstituteRef()).block();
-			//view.getAttributes().put(ExpAttr.organisation.label, inst);
+			return instituteService.refreshOrganisation(e.getInstituteRef()).flatMap(map -> {
+				view.getAttributes().put(ExpAttr.organisation.label, map);
+				return Mono.just(view);
+			});
 		}
-		
-		return view;
+		return Mono.just(view);
 	}
 
 	private Map<String, Object> getCompetence(SAACompetence c) {

@@ -33,11 +33,20 @@ type Organisation {
 	id: ID
 	name: String
 	description: String
-	address: String
+	address: Address
 	phone: String
 	email: String
 	pec: String
 	fiscalCode: String
+}
+
+type Address {
+	extendedAddress: String
+	street: String
+	locality: String
+	region: String
+	postalCode: String
+	country: String
 }
 
 type Competence {

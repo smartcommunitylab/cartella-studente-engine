@@ -93,10 +93,10 @@ public class InitController {
 		SAAInstitute i = new SAAInstitute();
 		i.setExtId(extId);
 		i.setOrigin("INFOTNISTRUZIONE");
-		i.setName("istituto");
-		i.setAddress("indirizzo");
-		i.setEmail("email");
-		i.setPec("pec");
+		i.setName("istituto1");
+		i.setAddress("indirizzo1");
+		i.setEmail("email1");
+		i.setPec("pec1");
 		return i;
 	}
 	
