@@ -26,7 +26,7 @@ import it.smartcommunitylab.csengine.util.Utils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Component("saaExam")
+@Component
 public class SAAExamService implements ExperienceConnector {
 	@Autowired
 	ExperienceRepository experienceRepository;
@@ -109,12 +109,6 @@ public class SAAExamService implements ExperienceConnector {
 		map.put(CompetenceAttr.preferredLabel.label, c.getPreferredLabel());
 		map.put(CompetenceAttr.altLabel.label, c.getAltLabel());
 		return map;
-	}
-
-	@Override
-	public Mono<Experience> fillExpFields(Experience e) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

@@ -4,7 +4,7 @@ public enum ExpAttr {
 	id("id"),
 	title("title"),
 	description("description"),
-	location("location"),
+	location("location"), //GeoJsonPoint
 	dateFrom("dateFrom"),
 	dateTo("dateTo"),
 	validityFrom("validityFrom"),

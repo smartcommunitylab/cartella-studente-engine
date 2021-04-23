@@ -7,6 +7,5 @@ import reactor.core.publisher.Mono;
 
 public interface ExperienceConnector {
 	public Flux<Experience> refreshExp(Person person);
-	public Mono<Experience> fillExpFields(Experience e);
 	public void setView(String view);
 }

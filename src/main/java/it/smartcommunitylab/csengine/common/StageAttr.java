@@ -3,7 +3,7 @@ package it.smartcommunitylab.csengine.common;
 public enum StageAttr {
 	type("type"),
 	duration("duration"),
-	location("location");
+	address("address"); //Address
 	
 	public final String label;
 	

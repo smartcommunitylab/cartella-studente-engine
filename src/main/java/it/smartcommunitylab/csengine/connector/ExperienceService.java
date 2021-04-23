@@ -20,7 +20,6 @@ public class ExperienceService {
 	PersonRepository personRepository;
 	@Autowired
 	ExperienceRepository experienceRepository;
-	
 	@Autowired
 	ConnectorManager connectorManager;
 	
@@ -32,12 +31,18 @@ public class ExperienceService {
 	public Flux<Experience> refreshExam(String fiscalCode) {
 		return personRepository.findByFiscalCode(fiscalCode)
 				.switchIfEmpty(this.addNewPerson(fiscalCode))
-				.flatMapMany(p -> this.mergeExamView(p));
+				.flatMapMany(p -> this.mergeExperienceView(p, EntityType.exam.label));
 	}
-	
-	private Flux<Experience> mergeExamView(Person person) {
+
+	public Flux<Experience> refreshStage(String fiscalCode) {
+		return personRepository.findByFiscalCode(fiscalCode)
+				.switchIfEmpty(this.addNewPerson(fiscalCode))
+				.flatMapMany(p -> this.mergeExperienceView(p, EntityType.stage.label));
+	}
+
+	private Flux<Experience> mergeExperienceView(Person person, String entityType) {
 		// TODO add logic to manage connectors choice
-		ConnectorConf conf = connectorManager.getExpConnector(EntityType.exam.label, 1);
+		ConnectorConf conf = connectorManager.getExpConnector(entityType, 1);
 		ExperienceConnector connector = connectorManager.getExpService(conf.getView());
 		return connector.refreshExp(person).flatMapSequential(e -> {
 			//TODO add logic to manage views
@@ -46,35 +51,19 @@ public class ExperienceService {
 				return experienceRepository.findByExtRef(conf.getView(), 
 						view.getIdentity().getExtUri(), view.getIdentity().getOrigin())
 						.switchIfEmpty(experienceRepository.save(e))
-						.flatMap(db -> this.updateExam(db, e, conf.getView()));
+						.flatMap(db -> this.updateExperience(db, e, conf.getView()));
 			}
 			return Mono.empty();
 		});
 	}
 	
-	public Flux<Experience> refreshStage(String fiscalCode) {
-		// TODO add logic to manage connectors choice
-		return personRepository.findByFiscalCode(fiscalCode)
-				.switchIfEmpty(this.addNewPerson(fiscalCode))
-				.flatMapMany(p -> this.mergeStageView(p));
-	}
-	
-	private Mono<Experience> updateExam(Experience db, Experience e, String view) {
+	private Mono<Experience> updateExperience(Experience db, Experience e, String view) {
 		if(db.getId().equals(e.getId())) {
 			return Mono.just(db);
 		}
 		return experienceRepository.updateView(db.getId(), EntityType.exp.label, e.getViews().get(EntityType.exp.label))
-		.then(experienceRepository.updateView(db.getId(), EntityType.exam.label, e.getViews().get(EntityType.exam.label)))
+		.then(experienceRepository.updateView(db.getId(), e.getEntityType(), e.getViews().get(e.getEntityType())))
 		.then(experienceRepository.updateView(db.getId(), view, e.getViews().get(view)));
-	}
-	
-	
-	private Flux<Experience> mergeStageView(Person person) {
-		return Flux.empty();
-//		return saaStageConnector.refreshExp(person).flatMap(e -> {
-//			//TODO add logic to manage views
-//			return saaStageConnector.fillExpFields(e);			
-//		});
 	}
 	
 	private Mono<Person> addNewPerson(String fiscalCode) {

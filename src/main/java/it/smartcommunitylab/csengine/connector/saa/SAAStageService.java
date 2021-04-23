@@ -1,9 +1,6 @@
 package it.smartcommunitylab.csengine.connector.saa;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,8 +9,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import it.smartcommunitylab.csengine.common.EntityType;
+import it.smartcommunitylab.csengine.common.ExpAttr;
 import it.smartcommunitylab.csengine.common.StageAttr;
 import it.smartcommunitylab.csengine.connector.ExperienceConnector;
+import it.smartcommunitylab.csengine.model.Address;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.ExtRef;
@@ -36,25 +35,40 @@ public class SAAStageService implements ExperienceConnector {
 		return client.get().uri("/saa/stage?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
 				.exchangeToFlux(response -> {
 					if (response.statusCode().equals(HttpStatus.OK)) {
-						return response.bodyToFlux(SAAStage.class).flatMap(e -> this.updateStage(person.getId(), e));
+						return response.bodyToFlux(SAAStage.class).flatMap(e -> this.getStage(person.getId(), e));
 					}
 					return Flux.empty();
 				});		
 	}
 
-	private Mono<Experience> updateStage(String personId, SAAStage s) {
-		return experienceRepository.findByExtRef(viewName, s.getExtId(), s.getOrigin())
-		.switchIfEmpty(this.addNewExperience(personId, EntityType.stage))
-		.flatMap(stage -> experienceRepository.updateView(stage.getId(), viewName, getDataView(s)));
+	private Mono<Experience> getStage(String personId, SAAStage s) {
+		Experience exp = new Experience();
+		exp.setPersonId(personId);
+		exp.setEntityType(EntityType.stage.label);
+		exp.getViews().put(EntityType.exp.label, getExpDataView(s));
+		exp.getViews().put(EntityType.stage.label, getStageDataView(s));
+		exp.getViews().put(viewName, getDataView(s));
+		return Mono.just(exp);
 	}
 	
-	private Mono<Experience> addNewExperience(String personId, EntityType type) {
-		Experience exp = new Experience();
-		exp.setEntityType(type.label);
-		exp.setPersonId(personId);
-		return experienceRepository.save(exp);
+	private DataView getStageDataView(SAAStage s) {
+		DataView view = new DataView();
+		view.getAttributes().put(StageAttr.type.label, s.getType());
+		view.getAttributes().put(StageAttr.duration.label, s.getDuration());
+		Address address = new Address();
+		address.setExtendedAddress(s.getLocation());
+		view.getAttributes().put(StageAttr.address.label, address);
+		return view;
 	}
-
+	
+	private DataView getExpDataView(SAAStage s) {
+		DataView view = new DataView();
+		view.getAttributes().put(ExpAttr.dateFrom.label, s.getDateFrom());
+		view.getAttributes().put(ExpAttr.dateTo.label, s.getDateTo());
+		view.getAttributes().put(ExpAttr.title.label, s.getTitle());
+		return view;
+	}	
+	
 	private DataView getDataView(SAAStage s) {
 		ExtRef identity = new ExtRef(s.getExtId(), s.getOrigin());
 		DataView view = new DataView();
@@ -66,20 +80,6 @@ public class SAAStageService implements ExperienceConnector {
 		view.getAttributes().put("duration", s.getDuration());
 		view.getAttributes().put("location", s.getLocation());
 		return view;
-	}
-
-	@Override
-	public Mono<Experience> fillExpFields(Experience e) {
-		DataView view = e.getViews().get(viewName);
-		Map<String, Object> attributes = new HashMap<>();
-		attributes.put(StageAttr.type.label, view.getAttributes().get("type"));
-		attributes.put(StageAttr.duration.label, view.getAttributes().get("duration"));
-		attributes.put(StageAttr.location.label, view.getAttributes().get("location"));		
-		return experienceRepository.updateFields(e.getId(), 
-				(String) view.getAttributes().get("title"), "", 
-				LocalDate.parse((String) view.getAttributes().get("dateFrom"), dtf), 
-				LocalDate.parse((String) view.getAttributes().get("dateTo"), dtf), 
-				null, attributes);
 	}
 
 	@Override
