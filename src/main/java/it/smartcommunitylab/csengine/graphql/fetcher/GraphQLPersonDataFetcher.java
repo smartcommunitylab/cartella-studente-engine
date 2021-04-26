@@ -26,9 +26,17 @@ public class GraphQLPersonDataFetcher {
 					.toStream();
 		};
 	}
-	
+
+	public DataFetcher<Address> getPersonAddress() {
+		return dataFetchingEnvironment -> {
+			PersonDTO p = dataFetchingEnvironment.getSource();
+			return p.getAddress();
+		};
+	}
+
 	private PersonDTO getPersonDTO(Person p) {
 		PersonDTO dto = new PersonDTO();
+		dto.setId(p.getId());
 		dto.setFiscalCode((String) p.getViews().get(EntityType.person.label).getAttributes().get(PersonAttr.fiscalCode.label));
 		dto.setName((String) p.getViews().get(EntityType.person.label).getAttributes().get(PersonAttr.name.label));
 		dto.setSurname((String) p.getViews().get(EntityType.person.label).getAttributes().get(PersonAttr.surname.label));

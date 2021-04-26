@@ -8,6 +8,10 @@ type Person {
 	name: String
 	surname: String
 	fiscalCode: String
+	address: Address
+	birthdate: String
+	phone: String
+	email: String
 }
 
 type Exam {
