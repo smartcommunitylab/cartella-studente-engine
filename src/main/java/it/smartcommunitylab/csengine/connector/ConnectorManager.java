@@ -44,7 +44,8 @@ public class ConnectorManager {
 				} else {
 					ExperienceConnector connector = (ExperienceConnector) context.getBean(c);
 					connector.setView(conf.getView());
-					experienceMap.put(conf.getView(), connector);					
+					String serviceKey = getServiceKey(conf.getEntityType(), conf.getView());
+					experienceMap.put(serviceKey, connector);					
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -53,12 +54,16 @@ public class ConnectorManager {
 		System.out.println("initServices");
 	}
 	
+	private String getServiceKey(String entityType, String view) {
+		return entityType + "_" + view;
+	}
+
 	public PersonConnector getPersonService(String view) {
 		return personMap.get(view);
 	}
 	
-	public ExperienceConnector getExpService(String view) {
-		return experienceMap.get(view);
+	public ExperienceConnector getExpService(String entityType, String view) {
+		return experienceMap.get(getServiceKey(entityType, view));
 	}
 	
 	public ConnectorConf getExpConnector(String entityType, int priority) {

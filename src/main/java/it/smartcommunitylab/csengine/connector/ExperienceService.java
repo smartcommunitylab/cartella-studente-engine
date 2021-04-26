@@ -36,7 +36,7 @@ public class ExperienceService {
 	private Flux<Experience> mergeExperienceView(Person person, String entityType) {
 		// TODO add logic to manage connectors choice
 		ConnectorConf conf = connectorManager.getExpConnector(entityType, 1);
-		ExperienceConnector connector = connectorManager.getExpService(conf.getView());
+		ExperienceConnector connector = connectorManager.getExpService(entityType, conf.getView());
 		return connector.refreshExp(person).flatMapSequential(e -> {
 			//TODO add logic to manage views
 			DataView view = e.getViews().get(conf.getView());
