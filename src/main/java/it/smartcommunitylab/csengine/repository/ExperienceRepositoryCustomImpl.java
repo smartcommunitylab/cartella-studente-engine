@@ -41,5 +41,11 @@ public class ExperienceRepositoryCustomImpl implements ExperienceRepositoryCusto
 		return template.findAndModify(query, update, options, Experience.class);
 	}
 
+	@Override
+	public Mono<Experience> findByAttr(String path, Object value) {
+		Query query = new Query(Criteria.where(path).is(value));
+		return template.findOne(query, Experience.class);
+	}
+
 
 }

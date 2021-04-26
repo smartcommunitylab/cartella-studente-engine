@@ -51,7 +51,6 @@ public class ConnectorManager {
 				e.printStackTrace();
 			}			
 		}
-		System.out.println("initServices");
 	}
 	
 	private String getServiceKey(String entityType, String view) {

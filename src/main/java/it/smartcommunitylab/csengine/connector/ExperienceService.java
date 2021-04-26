@@ -3,6 +3,9 @@ package it.smartcommunitylab.csengine.connector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
@@ -21,6 +24,8 @@ public class ExperienceService {
 	@Autowired
 	ConnectorManager connectorManager;
 	
+	ObjectMapper objectMapper = new ObjectMapper();
+	
 	public Flux<Experience> refreshExam(String fiscalCode) {
 		return personRepository.findByFiscalCode(fiscalCode)
 				.switchIfEmpty(this.addNewPerson(fiscalCode))
@@ -35,7 +40,7 @@ public class ExperienceService {
 
 	private Flux<Experience> mergeExperienceView(Person person, String entityType) {
 		// TODO add logic to manage connectors choice
-		ConnectorConf conf = connectorManager.getExpConnector(entityType, 1);
+		ConnectorConf conf = connectorManager.getExpConnector(entityType, 2);
 		ExperienceConnector connector = connectorManager.getExpService(entityType, conf.getView());
 		return connector.refreshExp(person).flatMapSequential(e -> {
 			//TODO add logic to manage views
@@ -43,11 +48,32 @@ public class ExperienceService {
 			if(view != null) {
 				return experienceRepository.findByExtRef(conf.getView(), 
 						view.getIdentity().getExtUri(), view.getIdentity().getOrigin())
-						.switchIfEmpty(experienceRepository.save(e))
+						.switchIfEmpty(this.findRelatedEntity(conf, e))
 						.flatMap(db -> this.updateExperience(db, e, conf.getView()));
 			}
 			return Mono.empty();
 		});
+	}
+	
+	private Mono<Experience> findRelatedEntity(ConnectorConf conf, Experience e) {
+		if(conf.getIdentityMap().isEmpty()) {
+			return experienceRepository.save(e);
+		}
+		for(String localAttr : conf.getIdentityMap().keySet()) {
+			String path = conf.getIdentityMap().get(localAttr).replaceAll("/", ".").substring(1);
+			try {
+				String json = objectMapper.writeValueAsString(e);
+				JsonNode rootNode = objectMapper.readTree(json);
+				JsonNode node = rootNode.at(localAttr);
+				if(!node.isMissingNode()) {
+					String value = node.asText();
+					return experienceRepository.findByAttr(path, value);
+				}
+			} catch (Exception ex) {
+				// TODO: handle exception
+			}
+		}
+		return Mono.empty();
 	}
 	
 	private Mono<Experience> updateExperience(Experience db, Experience e, String view) {

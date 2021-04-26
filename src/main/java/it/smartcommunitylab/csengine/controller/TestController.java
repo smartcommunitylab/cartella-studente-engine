@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.smartcommunitylab.csengine.connector.edit.EditStage;
 import it.smartcommunitylab.csengine.connector.saa.SAACompetence;
 import it.smartcommunitylab.csengine.connector.saa.SAAExam;
 import it.smartcommunitylab.csengine.connector.saa.SAAInstitute;
@@ -85,6 +86,26 @@ public class TestController {
 		s.setType("Terzo anno");
 		s.setTitle("3° OP. CARPENTERIA IN LEGNO - PRIMO PERIODO");
 		s.setDuration("80");
+		s.setLocation("EFFEFFE RESTAURI srl - LOCALITA' AL PONTE  38082 BORGO CHIESE (TN)");
+		list.add(s);
+		return list;
+	}
+	
+	@GetMapping("/edit/stage")
+	public List<EditStage> getEditStage(@RequestParam String fiscalCode) {
+		List<EditStage> list = new ArrayList<>();
+		EditStage s = new EditStage();
+		String id = RandomStringUtils.randomNumeric(8);
+		String saaId = fiscalCode + "_stage_1";
+		int giorno = random.nextInt(max - min) + min;
+		s.setExtId(id);
+		s.setOrigin("INFOTNISTRUZIONE");
+		s.setSaaId(saaId);
+		s.setDateFrom("2021-04-" + giorno);
+		s.setDateTo("2021-04-" + giorno);
+		s.setType("Terzo anno");
+		s.setTitle("3° OP. CARPENTERIA IN LEGNO - PRIMO PERIODO");
+		s.setDuration("70");
 		s.setLocation("EFFEFFE RESTAURI srl - LOCALITA' AL PONTE  38082 BORGO CHIESE (TN)");
 		list.add(s);
 		return list;
