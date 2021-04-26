@@ -20,7 +20,7 @@ import it.smartcommunitylab.csengine.repository.ExperienceRepository;
 import it.smartcommunitylab.csengine.repository.PersonRepository;
 
 @RestController
-public class InitController {
+public class TestController {
 	@Autowired
 	PersonRepository personRepository;
 	@Autowired
@@ -38,9 +38,11 @@ public class InitController {
 		s.setOrigin("INFOTNISTRUZIONE");
 		s.setExtId(id);
 		s.setCf(fiscalCode);
-		s.setName("Nome" + id);
-		s.setSurname("Cognome" + id);
-		s.setEmail("email" + id);
+		s.setName("Nome " + id);
+		s.setSurname("Cognome " + id);
+		s.setEmail("email " + id);
+		s.setPhone("telefono " + id);
+		s.setAddress("indirizzo " + id);
 		return s;
 	}
 	

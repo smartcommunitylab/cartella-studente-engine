@@ -1,7 +1,5 @@
 package it.smartcommunitylab.csengine.connector;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,11 +20,6 @@ public class ExperienceService {
 	ExperienceRepository experienceRepository;
 	@Autowired
 	ConnectorManager connectorManager;
-	
-	@PostConstruct
-	public void init() throws Exception {
-		connectorManager.initExpServices("exp_services.json");
-	}
 	
 	public Flux<Experience> refreshExam(String fiscalCode) {
 		return personRepository.findByFiscalCode(fiscalCode)

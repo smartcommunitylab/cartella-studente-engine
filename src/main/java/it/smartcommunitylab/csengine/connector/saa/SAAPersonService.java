@@ -8,7 +8,10 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import it.smartcommunitylab.csengine.common.EntityType;
+import it.smartcommunitylab.csengine.common.PersonAttr;
 import it.smartcommunitylab.csengine.connector.PersonConnector;
+import it.smartcommunitylab.csengine.model.Address;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.ExtRef;
 import it.smartcommunitylab.csengine.model.Person;
@@ -30,14 +33,16 @@ public class SAAPersonService implements PersonConnector {
 				.exchangeToMono(response -> {
 					if (response.statusCode().equals(HttpStatus.OK)) {
 						return response.bodyToMono(SAAStudent.class).flatMap(s -> {
-							return personRepository.updateView(person.getId(), viewName, getDataView(s));
+							return updateView(s);
 						});
 					}
 					return Mono.empty();
 				});		
 	}
 
-	private DataView getDataView(SAAStudent s) {
+	private Mono<Person> updateView(SAAStudent s) {
+		Person p = new Person();
+		
 		ExtRef identity = new ExtRef(s.getExtId(), s.getOrigin());
 		DataView view = new DataView();
 		view.setIdentity(identity);
@@ -49,18 +54,27 @@ public class SAAPersonService implements PersonConnector {
 		view.getAttributes().put("email", s.getEmail());
 		view.getAttributes().put("phone", s.getPhone());
 		view.getAttributes().put("mobilePhone", s.getMobilePhone());
+		
+		p.getViews().put(viewName, view);
+		p.getViews().put(EntityType.person.label, getDataView(s));
+		p.setFiscalCode(s.getCf());
+		return Mono.just(p);
+	}
+	
+	private DataView getDataView(SAAStudent s) {
+		DataView view = new DataView();
+		view.getAttributes().put(PersonAttr.name.label, s.getName());
+		view.getAttributes().put(PersonAttr.surname.label, s.getSurname());
+		Address address = new Address();
+		address.setExtendedAddress(s.getAddress());
+		view.getAttributes().put(PersonAttr.address.label, address);
+		view.getAttributes().put(PersonAttr.birthdate.label, s.getBirthdate());
+		view.getAttributes().put(PersonAttr.fiscalCode.label, s.getCf());
+		view.getAttributes().put(PersonAttr.email.label, s.getEmail());
+		view.getAttributes().put(PersonAttr.phone.label, s.getPhone() + " / " + s.getMobilePhone());
 		return view;
 	}
 	
-	@Override
-	public Mono<Person> fillPersonFields(Person p) {
-		DataView view = p.getViews().get(viewName);
-		return personRepository.updateFields(p.getId(), 
-				(String) view.getAttributes().get("name"), 
-				(String) view.getAttributes().get("surname"), 
-				(String) view.getAttributes().get("cf"));
-	}
-
 	@Override
 	public void setView(String view) {
 		this.viewName = view;

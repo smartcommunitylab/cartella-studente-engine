@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.schema.DataFetcher;
+import it.smartcommunitylab.csengine.common.EntityType;
+import it.smartcommunitylab.csengine.common.PersonAttr;
+import it.smartcommunitylab.csengine.model.Address;
 import it.smartcommunitylab.csengine.model.Person;
 import it.smartcommunitylab.csengine.model.dto.PersonDTO;
 import it.smartcommunitylab.csengine.repository.PersonRepository;
@@ -25,7 +28,14 @@ public class GraphQLPersonDataFetcher {
 	}
 	
 	private PersonDTO getPersonDTO(Person p) {
-		return new PersonDTO(p);
+		PersonDTO dto = new PersonDTO();
+		dto.setFiscalCode((String) p.getViews().get(EntityType.person.label).getAttributes().get(PersonAttr.fiscalCode.label));
+		dto.setName((String) p.getViews().get(EntityType.person.label).getAttributes().get(PersonAttr.name.label));
+		dto.setSurname((String) p.getViews().get(EntityType.person.label).getAttributes().get(PersonAttr.surname.label));
+		dto.setAddress((Address) p.getViews().get(EntityType.person.label).getAttributes().get(PersonAttr.address.label));
+		dto.setEmail((String) p.getViews().get(EntityType.person.label).getAttributes().get(PersonAttr.email.label));
+		dto.setPhone((String) p.getViews().get(EntityType.person.label).getAttributes().get(PersonAttr.phone.label));
+		return dto;
 	}
 
 }

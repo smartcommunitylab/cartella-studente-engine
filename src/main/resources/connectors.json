@@ -16,5 +16,14 @@
 	"identityMap": {
 		"edit_1.attributes.extId": "saa_1.identity.extUri"
 	}
+},
+{
+	"entityType": "person",
+	"view": "saa_1",
+	"priority": 1,
+	"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAPersonService",
+	"identityMap": {
+		"edit_1.attributes.extId": "saa_1.identity.extUri"
+	}
 }
 ]
