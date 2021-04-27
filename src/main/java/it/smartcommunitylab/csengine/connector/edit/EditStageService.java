@@ -35,7 +35,7 @@ public class EditStageService implements ExperienceConnector {
 		return client.get().uri("/edit/stage?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
 				.exchangeToFlux(response -> {
 					if (response.statusCode().equals(HttpStatus.OK)) {
-						return response.bodyToFlux(EditStage.class).flatMap(e -> this.getStage(person.getId(), e));
+						return response.bodyToFlux(EditStage.class).flatMapSequential(e -> this.getStage(person.getId(), e));
 					}
 					return Flux.empty();
 				});		

@@ -35,7 +35,7 @@ public class SAAStageService implements ExperienceConnector {
 		return client.get().uri("/saa/stage?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
 				.exchangeToFlux(response -> {
 					if (response.statusCode().equals(HttpStatus.OK)) {
-						return response.bodyToFlux(SAAStage.class).flatMap(e -> this.getStage(person.getId(), e));
+						return response.bodyToFlux(SAAStage.class).flatMapSequential(e -> this.getStage(person.getId(), e));
 					}
 					return Flux.empty();
 				});		
