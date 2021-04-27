@@ -43,7 +43,7 @@ public class SAAExamService implements ExperienceConnector {
 		return client.get().uri("/saa/exam?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
 				.exchangeToFlux(response -> {
 					if (response.statusCode().equals(HttpStatus.OK)) {
-						return response.bodyToFlux(SAAExam.class).flatMap(e -> this.getExam(person.getId(), e));
+						return response.bodyToFlux(SAAExam.class).flatMapSequential(e -> this.getExam(person.getId(), e));
 					}
 					return Flux.empty();
 				});		

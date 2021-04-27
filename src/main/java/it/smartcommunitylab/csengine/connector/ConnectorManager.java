@@ -1,8 +1,10 @@
 package it.smartcommunitylab.csengine.connector;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -72,6 +74,21 @@ public class ConnectorManager {
 			}
 		}
 		return null;
+	}
+	
+	public List<ConnectorConf> getExpConnectorsReverse(String entityType) {
+		List<ConnectorConf> list = servicesConfs.stream()
+				.filter(conf -> conf.getEntityType().equals(entityType))
+				.sorted(new Comparator<ConnectorConf>() {
+			    @Override
+			    public int compare(ConnectorConf o1, ConnectorConf o2) {
+			    		if (o1.getPriority() == o2.getPriority())
+			    			return 0;
+			        return o1.getPriority() > o2.getPriority() ? -1 : 1;
+			    }
+				})
+				.collect(Collectors.toList());     
+		return list;
 	}
 	
 }

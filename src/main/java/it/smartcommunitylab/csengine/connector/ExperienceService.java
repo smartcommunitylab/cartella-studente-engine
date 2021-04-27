@@ -1,5 +1,9 @@
 package it.smartcommunitylab.csengine.connector;
 
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +21,8 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class ExperienceService {
+	static Log logger = LogFactory.getLog(ExperienceService.class);
+	
 	@Autowired
 	PersonRepository personRepository;
 	@Autowired
@@ -39,26 +45,28 @@ public class ExperienceService {
 	}
 
 	private Flux<Experience> mergeExperienceView(Person person, String entityType) {
-		// TODO add logic to manage connectors choice
-		ConnectorConf conf = connectorManager.getExpConnector(entityType, 1);
-		ExperienceConnector connector = connectorManager.getExpService(entityType, conf.getView());
-		return connector.refreshExp(person).flatMapSequential(e -> {
-			//TODO add logic to manage views
-			DataView view = e.getViews().get(conf.getView());
-			if(view != null) {
-				return experienceRepository.findByExtRef(conf.getView(), 
-						view.getIdentity().getExtUri(), view.getIdentity().getOrigin())
-						.switchIfEmpty(this.findRelatedEntity(conf, e))
-						.switchIfEmpty(experienceRepository.save(e))
-						.flatMap(db -> this.updateExperience(db, e, conf.getView()));
-			}
-			return Mono.empty();
-		});
+		List<ConnectorConf> list = connectorManager.getExpConnectorsReverse(entityType);
+		return Flux.fromIterable(list)
+				.concatMap(conf -> {
+					logger.info("mergeExperienceView:" + conf.getView());
+					ExperienceConnector connector = connectorManager.getExpService(entityType, conf.getView());
+					return connector.refreshExp(person).concatMap(e -> {
+						DataView view = e.getViews().get(conf.getView());
+						if(view != null) {
+							return experienceRepository.findByExtRef(conf.getView(), 
+									view.getIdentity().getExtUri(), view.getIdentity().getOrigin())
+									.switchIfEmpty(this.findRelatedEntity(conf, e))
+									.switchIfEmpty(experienceRepository.save(e))
+									.flatMap(db -> this.updateExperience(db, e, conf.getView()));
+						}
+						return Mono.empty();
+					});					
+				});
 	}
 	
 	private Mono<Experience> findRelatedEntity(ConnectorConf conf, Experience e) {
 		return Flux.fromIterable(conf.getIdentityMap())
-			.flatMapSequential(keyMap -> {
+			.concatMap(keyMap -> {
 				String extPath = keyMap.getExtPath().replaceAll("/", ".").substring(1);
 				String path = keyMap.getPath();
 				try {
@@ -78,12 +86,29 @@ public class ExperienceService {
 	}
 	
 	private Mono<Experience> updateExperience(Experience db, Experience e, String view) {
+		logger.info("updateExperience:" + view);
 		if(db.getId().equals(e.getId())) {
 			return Mono.just(db);
 		}
-		return experienceRepository.updateView(db.getId(), EntityType.exp.label, e.getViews().get(EntityType.exp.label))
-		.then(experienceRepository.updateView(db.getId(), e.getEntityType(), e.getViews().get(e.getEntityType())))
-		.then(experienceRepository.updateView(db.getId(), view, e.getViews().get(view)));
+		if(db.getViews().get(EntityType.exp.label) != null) {
+			db.getViews().get(EntityType.exp.label).getAttributes()
+			.putAll(e.getViews().get(EntityType.exp.label).getAttributes());
+		} else {
+			db.getViews().put(EntityType.exp.label, e.getViews().get(EntityType.exp.label));
+		}
+		if(db.getViews().get(e.getEntityType()) != null) {
+			db.getViews().get(e.getEntityType()).getAttributes()
+			.putAll(e.getViews().get(e.getEntityType()).getAttributes());
+		} else {
+			db.getViews().put(e.getEntityType(), e.getViews().get(e.getEntityType()));
+		}
+		if(db.getViews().get(view) != null) {
+			db.getViews().get(view).getAttributes().
+			putAll(e.getViews().get(view).getAttributes());
+		} else {
+			db.getViews().put(view, e.getViews().get(view));
+		}
+		return experienceRepository.save(db);
 	}
 	
 	private Mono<Person> addNewPerson(String fiscalCode) {
