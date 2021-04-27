@@ -40,7 +40,7 @@ public class ExperienceService {
 
 	private Flux<Experience> mergeExperienceView(Person person, String entityType) {
 		// TODO add logic to manage connectors choice
-		ConnectorConf conf = connectorManager.getExpConnector(entityType, 2);
+		ConnectorConf conf = connectorManager.getExpConnector(entityType, 1);
 		ExperienceConnector connector = connectorManager.getExpService(entityType, conf.getView());
 		return connector.refreshExp(person).flatMapSequential(e -> {
 			//TODO add logic to manage views
@@ -49,6 +49,7 @@ public class ExperienceService {
 				return experienceRepository.findByExtRef(conf.getView(), 
 						view.getIdentity().getExtUri(), view.getIdentity().getOrigin())
 						.switchIfEmpty(this.findRelatedEntity(conf, e))
+						.switchIfEmpty(experienceRepository.save(e))
 						.flatMap(db -> this.updateExperience(db, e, conf.getView()));
 			}
 			return Mono.empty();
@@ -56,24 +57,24 @@ public class ExperienceService {
 	}
 	
 	private Mono<Experience> findRelatedEntity(ConnectorConf conf, Experience e) {
-		if(conf.getIdentityMap().isEmpty()) {
-			return experienceRepository.save(e);
-		}
-		for(String localAttr : conf.getIdentityMap().keySet()) {
-			String path = conf.getIdentityMap().get(localAttr).replaceAll("/", ".").substring(1);
-			try {
-				String json = objectMapper.writeValueAsString(e);
-				JsonNode rootNode = objectMapper.readTree(json);
-				JsonNode node = rootNode.at(localAttr);
-				if(!node.isMissingNode()) {
-					String value = node.asText();
-					return experienceRepository.findByAttr(path, value);
+		return Flux.fromIterable(conf.getIdentityMap())
+			.flatMapSequential(keyMap -> {
+				String extPath = keyMap.getExtPath().replaceAll("/", ".").substring(1);
+				String path = keyMap.getPath();
+				try {
+					String json = objectMapper.writeValueAsString(e);
+					JsonNode rootNode = objectMapper.readTree(json);
+					JsonNode node = rootNode.at(path);
+					if(!node.isMissingNode()) {
+						String value = node.asText();
+						return experienceRepository.findByAttr(extPath, value);
+					}
+				} catch (Exception ex) {
+					// TODO: handle exception
 				}
-			} catch (Exception ex) {
-				// TODO: handle exception
-			}
-		}
-		return Mono.empty();
+				return Mono.empty();
+			})
+			.next();
 	}
 	
 	private Mono<Experience> updateExperience(Experience db, Experience e, String view) {

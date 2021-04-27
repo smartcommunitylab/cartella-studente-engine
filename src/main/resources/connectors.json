@@ -4,33 +4,41 @@
 	"view": "saa_1",
 	"priority": 1,
 	"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAExamService",
-	"identityMap": {
-	}
+	"identityMap": []
 },
 {
 	"entityType": "stage",
 	"view": "saa_1",
 	"priority": 1,
 	"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAStageService",
-	"identityMap": {
-	}
+	"identityMap": [
+		{
+			"path": "/views/saa_1/identity/extUri",
+			"extPath": "/views/edit_1/attributes/saaId"
+		}		
+	]
 },
 {
 	"entityType": "stage",
 	"view": "edit_1",
 	"priority": 2,
 	"implementor": "it.smartcommunitylab.csengine.connector.edit.EditStageService",
-	"identityMap": {
-		"/views/edit_1/attributes/saaId": "/views/saa_1/identity/extUri"
-	}
+	"identityMap": [
+		{
+			"path": "/views/edit_1/attributes/saaId",
+			"extPath": "/views/test/identity/extUri"
+		},
+		{
+			"path": "/views/edit_1/attributes/saaId",
+			"extPath": "/views/saa_1/identity/extUri"
+		}
+	]
 },
 {
 	"entityType": "person",
 	"view": "saa_1",
 	"priority": 1,
 	"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAPersonService",
-	"identityMap": {
-		"edit_1.attributes.extId": "saa_1.identity.extUri"
-	}
+	"identityMap": []
 }
 ]
