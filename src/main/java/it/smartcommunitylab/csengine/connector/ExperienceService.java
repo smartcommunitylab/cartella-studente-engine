@@ -61,7 +61,7 @@ public class ExperienceService {
 						}
 						return Mono.empty();
 					});					
-				});
+				}).thenMany(experienceRepository.findAllByPersonIdAndEntityType(person.getId(), entityType));
 	}
 	
 	private Mono<Experience> findRelatedEntity(ConnectorConf conf, Experience e) {
