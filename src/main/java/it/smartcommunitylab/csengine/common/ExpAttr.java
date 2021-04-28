@@ -1,7 +1,6 @@
 package it.smartcommunitylab.csengine.common;
 
 public enum ExpAttr {
-	id("id"),
 	title("title"),
 	description("description"),
 	location("location"), //GeoJsonPoint

@@ -2,13 +2,13 @@ package it.smartcommunitylab.csengine.common;
 
 public enum CompetenceAttr {
 	uri("uri"),
-	concentType("concentType"), //Map<String, String> (lang, value)
+	concentType("concentType"), 
 	preferredLabel("preferredLabel"), //Map<String, String> (lang, value)
-	altLabel("altLabel"), //Address
-	validityFrom("validityFrom"), //GeoJsonPoint
+	altLabel("altLabel"), //Map<String, String> (lang, value)
+	validityFrom("validityFrom"),
 	validityTo("validityTo"),
 	assessment("assessment"),
-	certifyingOrganisation("certifyingOrganisation");
+	certifyingOrganisation("certifyingOrganisation"); //Organisation_attr
 	
 	public final String label;
 	
