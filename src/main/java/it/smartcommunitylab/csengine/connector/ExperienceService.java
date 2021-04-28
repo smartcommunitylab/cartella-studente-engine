@@ -102,12 +102,7 @@ public class ExperienceService {
 		} else {
 			db.getViews().put(e.getEntityType(), e.getViews().get(e.getEntityType()));
 		}
-		if(db.getViews().get(view) != null) {
-			db.getViews().get(view).getAttributes().
-			putAll(e.getViews().get(view).getAttributes());
-		} else {
-			db.getViews().put(view, e.getViews().get(view));
-		}
+		db.getViews().put(view, e.getViews().get(view));
 		return experienceRepository.save(db);
 	}
 	
