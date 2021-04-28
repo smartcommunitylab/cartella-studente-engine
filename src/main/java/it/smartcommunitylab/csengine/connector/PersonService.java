@@ -51,12 +51,7 @@ public class PersonService {
 		} else {
 			db.getViews().put(EntityType.person.label, p.getViews().get(EntityType.person.label));
 		}
-		if(db.getViews().get(view) != null) {
-			db.getViews().get(view).getAttributes()
-			.putAll(p.getViews().get(view).getAttributes());
-		} else {
-			db.getViews().put(view, p.getViews().get(view));
-		}
+		db.getViews().put(view, p.getViews().get(view));
 		return personRepository.save(db);
 	}
 	
