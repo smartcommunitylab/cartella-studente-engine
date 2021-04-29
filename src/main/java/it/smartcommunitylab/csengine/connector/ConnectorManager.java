@@ -76,6 +76,15 @@ public class ConnectorManager {
 		return null;
 	}
 	
+	public ConnectorConf getExpConnector(String entityType, String view) {
+		for(ConnectorConf conf : servicesConfs.getConnectors()) {
+			if(conf.getEntityType().equals(entityType) && conf.getView().equals(view)) {
+				return conf;
+			}			
+		}
+		return null;
+	}
+	
 	public List<ConnectorConf> getExpConnectorsReverse(String entityType) {
 		List<ConnectorConf> list = servicesConfs.getConnectors().stream()
 				.filter(conf -> conf.getEntityType().equals(entityType))
