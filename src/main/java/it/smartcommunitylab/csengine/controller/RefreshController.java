@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.connector.ExperienceService;
 import it.smartcommunitylab.csengine.connector.PersonService;
 import it.smartcommunitylab.csengine.model.Experience;
@@ -26,12 +27,12 @@ public class RefreshController {
 	
 	@GetMapping("/exam/refresh")
 	public Flux<Experience> refreshExam(@RequestParam String fiscalCode) {
-		return experienceService.refreshExam(fiscalCode);
+		return experienceService.refreshExp(fiscalCode, EntityType.exam.label);
 	}
 	
 	@GetMapping("/stage/refresh")
 	public Flux<Experience> refreshStage(@RequestParam String fiscalCode) {
-		return experienceService.refreshStage(fiscalCode);
+		return experienceService.refreshExp(fiscalCode, EntityType.stage.label);
 	}
 
 

@@ -33,16 +33,10 @@ public class ExperienceService {
 	
 	ObjectMapper objectMapper = new ObjectMapper();
 	
-	public Flux<Experience> refreshExam(String fiscalCode) {
+	public Flux<Experience> refreshExp(String fiscalCode, String entityType) {
 		return personRepository.findByFiscalCode(fiscalCode)
 				.switchIfEmpty(this.addNewPerson(fiscalCode))
-				.flatMapMany(p -> this.mergeExperienceView(p, EntityType.exam.label));
-	}
-
-	public Flux<Experience> refreshStage(String fiscalCode) {
-		return personRepository.findByFiscalCode(fiscalCode)
-				.switchIfEmpty(this.addNewPerson(fiscalCode))
-				.flatMapMany(p -> this.mergeExperienceView(p, EntityType.stage.label));
+				.flatMapMany(p -> this.mergeExperienceView(p, entityType));
 	}
 
 	private Flux<Experience> mergeExperienceView(Person person, String entityType) {
@@ -67,6 +61,9 @@ public class ExperienceService {
 	
 	private Mono<Experience> findRelatedEntity(ConnectorConf conf, Experience e) {
 		List<Map<String,String>> identityMap = connectorManager.getIdentityMap(conf.getEntityType());
+		if(identityMap == null) {
+			return Mono.empty();
+		}
 		return Flux.fromIterable(identityMap)
 				.filter(keyMap -> keyMap.containsKey(conf.getView()))
 				.concatMap(keyMap -> {
