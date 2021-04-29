@@ -73,6 +73,7 @@ public class EditStageService implements ExperienceConnector {
 		ExtRef identity = new ExtRef(s.getExtId(), s.getOrigin());
 		DataView view = new DataView();
 		view.setIdentity(identity);
+		view.getAttributes().put("extId", s.getExtId());
 		view.getAttributes().put("dateFrom", s.getDateFrom());
 		view.getAttributes().put("dateTo", s.getDateTo());
 		view.getAttributes().put("title", s.getTitle());

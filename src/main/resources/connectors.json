@@ -1,44 +1,41 @@
-[
 {
-	"entityType": "exam",
-	"view": "saa_1",
-	"priority": 1,
-	"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAExamService",
-	"identityMap": []
-},
-{
-	"entityType": "stage",
-	"view": "saa_1",
-	"priority": 1,
-	"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAStageService",
-	"identityMap": [
+	"connectors": [
 		{
-			"path": "/views/saa_1/identity/extUri",
-			"extPath": "/views/edit_1/attributes/saaId"
-		}		
-	]
-},
-{
-	"entityType": "stage",
-	"view": "edit_1",
-	"priority": 2,
-	"implementor": "it.smartcommunitylab.csengine.connector.edit.EditStageService",
-	"identityMap": [
-		{
-			"path": "/views/edit_1/attributes/saaId",
-			"extPath": "/views/test/identity/extUri"
+			"entityType": "exam",
+			"view": "saa_1",
+			"priority": 1,
+			"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAExamService"
 		},
 		{
-			"path": "/views/edit_1/attributes/saaId",
-			"extPath": "/views/saa_1/identity/extUri"
+			"entityType": "stage",
+			"view": "saa_1",
+			"priority": 1,
+			"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAStageService"
+		},
+		{
+			"entityType": "stage",
+			"view": "edit_1",
+			"priority": 2,
+			"implementor": "it.smartcommunitylab.csengine.connector.edit.EditStageService"
+		},
+		{
+			"entityType": "person",
+			"view": "saa_1",
+			"priority": 1,
+			"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAPersonService"
 		}
-	]
-},
-{
-	"entityType": "person",
-	"view": "saa_1",
-	"priority": 1,
-	"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAPersonService",
-	"identityMap": []
+	],
+	"identityMap": {
+		"stage": [
+			{
+				"saa_1": "extId",
+				"edit_1": "testId"
+			},			
+			{
+				"saa_1": "extId",
+				"edit_1": "saaId"
+			}
+		]
+	}
 }
-]
+

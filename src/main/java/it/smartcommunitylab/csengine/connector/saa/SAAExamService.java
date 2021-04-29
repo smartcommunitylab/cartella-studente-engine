@@ -65,6 +65,7 @@ public class SAAExamService implements ExperienceConnector {
 		ExtRef identity = new ExtRef(e.getExtId(), e.getOrigin());
 		DataView view = new DataView();
 		view.setIdentity(identity);
+		view.getAttributes().put("extId", e.getExtId());
 		view.getAttributes().put("dateFrom", e.getDateFrom());
 		view.getAttributes().put("dateTo", e.getDateTo());
 		view.getAttributes().put("qualification", e.getQualification());

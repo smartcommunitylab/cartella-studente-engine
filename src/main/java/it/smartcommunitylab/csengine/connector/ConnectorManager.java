@@ -15,7 +15,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.smartcommunitylab.csengine.common.EntityType;
@@ -25,7 +24,8 @@ public class ConnectorManager {
 	@Autowired
 	private ApplicationContext context;
 	
-	List<ConnectorConf> servicesConfs;
+	ConnectorsConf servicesConfs;
+	//List<ConnectorConf> servicesConfs;
 	Map<String, ExperienceConnector> experienceMap = new HashMap<>();
 	Map<String, PersonConnector> personMap = new HashMap<>();
 	
@@ -35,8 +35,8 @@ public class ConnectorManager {
 		ObjectMapper objectMapper = new ObjectMapper();
 		ResourceLoader resourceLoader = new DefaultResourceLoader();
 		Resource resource = resourceLoader.getResource("classpath:connectors.json");
-		servicesConfs = objectMapper.readValue(resource.getInputStream(), new TypeReference<List<ConnectorConf>>(){});
-		for(ConnectorConf conf : servicesConfs) {
+		servicesConfs = objectMapper.readValue(resource.getInputStream(), ConnectorsConf.class);
+		for(ConnectorConf conf : servicesConfs.getConnectors()) {
 			try {
 				Class c = Class.forName(conf.getImplementor());
 				if(EntityType.person.label.equals(conf.getEntityType())) {
@@ -68,7 +68,7 @@ public class ConnectorManager {
 	}
 	
 	public ConnectorConf getExpConnector(String entityType, int priority) {
-		for(ConnectorConf conf : servicesConfs) {
+		for(ConnectorConf conf : servicesConfs.getConnectors()) {
 			if(conf.getEntityType().equals(entityType) && (conf.getPriority() == priority)) {
 				return conf;
 			}
@@ -77,7 +77,7 @@ public class ConnectorManager {
 	}
 	
 	public List<ConnectorConf> getExpConnectorsReverse(String entityType) {
-		List<ConnectorConf> list = servicesConfs.stream()
+		List<ConnectorConf> list = servicesConfs.getConnectors().stream()
 				.filter(conf -> conf.getEntityType().equals(entityType))
 				.sorted(new Comparator<ConnectorConf>() {
 			    @Override
@@ -89,6 +89,10 @@ public class ConnectorManager {
 				})
 				.collect(Collectors.toList());     
 		return list;
+	}
+	
+	public List<Map<String, String>> getIdentityMap(String entityType) {
+		return servicesConfs.getIdentityMap().get(entityType);
 	}
 	
 }
