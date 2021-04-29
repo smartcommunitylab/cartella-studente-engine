@@ -8,7 +8,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.smartcommunitylab.csengine.common.EntityType;
@@ -71,25 +70,18 @@ public class ExperienceService {
 		return Flux.fromIterable(identityMap)
 				.filter(keyMap -> keyMap.containsKey(conf.getView()))
 				.concatMap(keyMap -> {
-					String path = "/views/" + conf.getView() + "/attributes/" + keyMap.get(conf.getView());
+					logger.info(String.format("findRelatedEntity:%s / %s", conf.getView(), keyMap));
 					String extView = keyMap.keySet().stream().filter(key -> !key.equals(conf.getView())).findFirst().orElse(null);					
 					if(Utils.isNotEmpty(extView)) {
 						String extPath = "views." + extView + ".attributes." + keyMap.get(extView);
-						try {
-							String json = objectMapper.writeValueAsString(e);
-							JsonNode rootNode = objectMapper.readTree(json);
-							JsonNode node = rootNode.at(path);
-							if(!node.isMissingNode()) {
-								String value = node.asText();
-								return experienceRepository.findByAttr(extPath, value);
-							}
-						} catch (Exception ex) {
-							// TODO: handle exception
-						}						
+						Object value = e.getViews().get(conf.getView()).getAttributes().get(keyMap.get(conf.getView()));
+						if(value == null) {
+							return Mono.empty();
+						}
+						return experienceRepository.findByAttr(extPath, value);
 					}
 					return Mono.empty();
-				})
-				.next();
+				}).next();
 	}
 	
 	private Mono<Experience> updateExperience(Experience db, Experience e, String view) {
