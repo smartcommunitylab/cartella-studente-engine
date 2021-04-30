@@ -1,14 +1,14 @@
 package it.smartcommunitylab.csengine.common;
 
-public enum StageAttr {
+public enum MobilityAttr {
 	type("type"),
 	duration("duration"),
 	address("address"), //Address
-	contact("contact");
+	language("language");
 	
 	public final String label;
 	
-	private StageAttr(String label) {
+	private MobilityAttr(String label) {
     this.label = label;
 	}
 
