@@ -12,6 +12,7 @@ public class Experience {
 	private String id;
 	private String personId;
 	private String entityType;
+	private boolean personal = false; 
 	private Map<String, DataView> views = new HashMap<>();
 	
 	public String getId() {
@@ -37,6 +38,12 @@ public class Experience {
 	}
 	public void setViews(Map<String, DataView> views) {
 		this.views = views;
+	}
+	public boolean isPersonal() {
+		return personal;
+	}
+	public void setPersonal(boolean personal) {
+		this.personal = personal;
 	}
 
 

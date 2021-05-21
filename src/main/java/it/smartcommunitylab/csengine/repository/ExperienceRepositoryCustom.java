@@ -12,4 +12,5 @@ public interface ExperienceRepositoryCustom {
 	public Mono<Experience> updateView(String expId, String view, DataView dw); 
 	public Mono<Experience> updateFields(String expId, String title, String description, 
 			LocalDate dateFrom, LocalDate dateTo, String organisationId, Map<String, Object> attributes);
+	public Mono<Experience> deleteByExpId(String expId);
 }

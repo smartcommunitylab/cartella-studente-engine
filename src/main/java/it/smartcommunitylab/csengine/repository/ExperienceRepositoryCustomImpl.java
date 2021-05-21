@@ -46,6 +46,11 @@ public class ExperienceRepositoryCustomImpl implements ExperienceRepositoryCusto
 		Query query = new Query(Criteria.where(path).is(value));
 		return template.findOne(query, Experience.class);
 	}
+	
+	public Mono<Experience> deleteByExpId(String expId) {
+		Query query = new Query(Criteria.where("id").is(expId));
+		return template.findAndRemove(query, Experience.class);
+	}
 
 
 }

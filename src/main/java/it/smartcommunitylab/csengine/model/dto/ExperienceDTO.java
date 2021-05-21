@@ -6,7 +6,6 @@ import java.util.List;
 public class ExperienceDTO {
 	private String id;
 	private String personId;
-	private String organisationId;
 	private String title;
 	private String description;
 	private String entityType;		
@@ -54,14 +53,6 @@ public class ExperienceDTO {
 
 	public void setPersonId(String personId) {
 		this.personId = personId;
-	}
-
-	public String getOrganisationId() {
-		return organisationId;
-	}
-
-	public void setOrganisationId(String organisationId) {
-		this.organisationId = organisationId;
 	}
 
 	public String getDateFrom() {
