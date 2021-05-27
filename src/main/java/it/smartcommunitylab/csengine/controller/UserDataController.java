@@ -30,17 +30,17 @@ public class UserDataController implements CSController {
 		return userDataManager.addExperience(fiscalCode, entityType, attributes);
 	}
 
-	@PutMapping("/api/user/experience/{id}")
+	@PutMapping("/api/user/experience/{expId}")
 	public Mono<Experience> updateExperience(
 			@PathVariable String expId,
 			@RequestParam String fiscalCode,
 			@RequestParam String entityType,
 			@RequestBody Map<String, Object> attributes) throws Exception {
 		//TODO check role
-		return null;
+		return userDataManager.updateExperience(fiscalCode, expId, entityType, attributes);
 	}
 
-	@DeleteMapping("/api/user/experience/{id}")
+	@DeleteMapping("/api/user/experience/{expId}")
 	public Mono<Experience> deleteExperience(
 			@PathVariable String expId,
 			@RequestParam String fiscalCode) throws Exception {

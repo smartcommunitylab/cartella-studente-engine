@@ -27,16 +27,13 @@ public class UserDataManager {
 		.switchIfEmpty(Mono.error(new NotFoundException("person not found")))
 		.flatMap(person -> {
 			return experienceRepository.findById(expId)
-					.handle((exp, sink) -> {
-						if(exp == null) {
-							sink.error(new NotFoundException("entity not found"));
-						}
+					.switchIfEmpty(Mono.error(new NotFoundException("entity not found")))
+					.flatMap(exp -> {
 						if(!exp.isPersonal()) {
-							sink.error(new BadRequestException("entity not erasable"));
-						}
-						sink.next(exp);
-					})
-					.flatMap(exp -> experienceRepository.deleteByExpId(expId));
+							return Mono.error(new BadRequestException("entity not erasable"));
+						}						
+						return experienceRepository.deleteByExpId(expId);
+					});
 		});
 	}
 
@@ -64,16 +61,13 @@ public class UserDataManager {
 		.switchIfEmpty(Mono.error(new NotFoundException("person not found")))
 		.flatMap(person -> {
 			return experienceRepository.findById(expId)
-					.handle((exp, sink) -> {
-						if(exp == null) {
-							sink.error(new NotFoundException("entity not found"));
-						}
+					.switchIfEmpty(Mono.error(new NotFoundException("entity not found")))
+					.flatMap(exp -> {
 						if(!exp.isPersonal()) {
-							sink.error(new BadRequestException("entity not editable"));
+							return Mono.error(new BadRequestException("entity not editable"));
 						}
-						sink.next(exp);
-					})
-					.flatMap(exp -> updateViews((Experience) exp, entityType, attributes));			
+						return updateViews((Experience) exp, entityType, attributes);
+					});			
 		});
 	}
 	
