@@ -15,9 +15,9 @@ import reactor.core.publisher.Mono;
 @Component(value="saaInstitute")
 public class SAAInstituteService {
 
-	public Mono<Map<String, Object>> refreshOrganisation(String extId) {
-		WebClient client = WebClient.create("http://localhost:8080");
-		return client.get().uri("/saa/institute?extId=" + extId).accept(MediaType.APPLICATION_JSON)
+	public Mono<Map<String, Object>> refreshOrganisation(String extId, String uri) {
+		WebClient client = WebClient.create(uri);
+		return client.get().uri("/institute?extId=" + extId).accept(MediaType.APPLICATION_JSON)
 				.exchangeToMono(response -> {
 					if (response.statusCode().equals(HttpStatus.OK)) {
 						return response.bodyToMono(SAAInstitute.class).flatMap(i -> this.getDataView(i));

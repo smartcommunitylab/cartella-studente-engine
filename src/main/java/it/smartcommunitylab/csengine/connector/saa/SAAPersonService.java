@@ -29,8 +29,8 @@ public class SAAPersonService implements PersonConnector {
 
 	@Override
 	public Mono<Person> refreshPerson(Person person) {
-		WebClient client = WebClient.create("http://localhost:8080");
-		return client.get().uri("/saa/student?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
+		WebClient client = WebClient.create(uri);
+		return client.get().uri("/student?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
 				.exchangeToMono(response -> {
 					if (response.statusCode().equals(HttpStatus.OK)) {
 						return response.bodyToMono(SAAStudent.class).flatMap(s -> {

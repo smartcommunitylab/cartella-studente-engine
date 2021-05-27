@@ -33,7 +33,7 @@ public class EditStageService implements ExperienceConnector {
 	@Override
 	public Flux<Experience> refreshExp(Person person) {
 		WebClient client = WebClient.create(uri);
-		return client.get().uri("?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
+		return client.get().uri("/stage?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
 				.exchangeToFlux(response -> {
 					if (response.statusCode().equals(HttpStatus.OK)) {
 						return response.bodyToFlux(EditStage.class).flatMapSequential(e -> this.getStage(person.getId(), e));

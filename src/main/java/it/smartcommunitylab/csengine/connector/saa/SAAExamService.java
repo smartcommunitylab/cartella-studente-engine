@@ -41,7 +41,7 @@ public class SAAExamService implements ExperienceConnector {
 	@Override
 	public Flux<Experience> refreshExp(Person person) {
 		WebClient client = WebClient.create(uri);
-		return client.get().uri("?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
+		return client.get().uri("/exam?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
 				.exchangeToFlux(response -> {
 					if (response.statusCode().equals(HttpStatus.OK)) {
 						return response.bodyToFlux(SAAExam.class).flatMapSequential(e -> this.getExam(person.getId(), e));
@@ -96,7 +96,7 @@ public class SAAExamService implements ExperienceConnector {
 			view.getAttributes().put(ExpAttr.competences.label, list);
 		}
 		if(Utils.isNotEmpty(e.getInstituteRef())) {
-			return instituteService.refreshOrganisation(e.getInstituteRef()).flatMap(map -> {
+			return instituteService.refreshOrganisation(e.getInstituteRef(), uri).flatMap(map -> {
 				view.getAttributes().put(ExpAttr.organisation.label, map);
 				return Mono.just(view);
 			});

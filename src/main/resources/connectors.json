@@ -5,28 +5,28 @@
 			"view": "saa_1",
 			"priority": 1,
 			"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAExamService",
-			"uri": "http://localhost:8282/saa/exam"
+			"uri": "http://localhost:8282/saa"
 		},
 		{
 			"entityType": "stage",
 			"view": "saa_1",
 			"priority": 1,
 			"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAStageService",
-			"uri": "http://localhost:8282/saa/stage"
+			"uri": "http://localhost:8282/saa"
 		},
 		{
 			"entityType": "stage",
 			"view": "edit_1",
 			"priority": 2,
 			"implementor": "it.smartcommunitylab.csengine.connector.edit.EditStageService",
-			"uri": "http://localhost:8080/cse/edit/stage"
+			"uri": "http://localhost:8080/cse/edit"
 		},
 		{
 			"entityType": "person",
 			"view": "saa_1",
 			"priority": 1,
 			"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAPersonService",
-			"uri": "http://localhost:8282/saa/student"
+			"uri": "http://localhost:8282/saa"
 		}
 	],
 	"identityMap": {
