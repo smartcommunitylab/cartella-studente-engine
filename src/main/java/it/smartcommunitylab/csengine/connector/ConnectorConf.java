@@ -5,6 +5,7 @@ public class ConnectorConf {
 	private String view;
 	private int priority;
 	private String implementor;
+	private String uri;
 	
 	public String getEntityType() {
 		return entityType;
@@ -29,5 +30,11 @@ public class ConnectorConf {
 	}
 	public void setImplementor(String implementor) {
 		this.implementor = implementor;
+	}
+	public String getUri() {
+		return uri;
+	}
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 }

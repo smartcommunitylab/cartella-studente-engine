@@ -24,6 +24,7 @@ public class SAAPersonService implements PersonConnector {
 	PersonRepository personRepository;
 	
 	String viewName;
+	String uri;
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	@Override
@@ -78,6 +79,11 @@ public class SAAPersonService implements PersonConnector {
 	@Override
 	public void setView(String view) {
 		this.viewName = view;
+	}
+
+	@Override
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 	
 }

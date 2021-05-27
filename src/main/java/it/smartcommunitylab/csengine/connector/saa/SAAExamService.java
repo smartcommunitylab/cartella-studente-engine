@@ -35,12 +35,13 @@ public class SAAExamService implements ExperienceConnector {
 	SAAInstituteService instituteService;
 	
 	String viewName;
+	String uri;
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	@Override
 	public Flux<Experience> refreshExp(Person person) {
-		WebClient client = WebClient.create("http://localhost:8080");
-		return client.get().uri("/saa/exam?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
+		WebClient client = WebClient.create(uri);
+		return client.get().uri("?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
 				.exchangeToFlux(response -> {
 					if (response.statusCode().equals(HttpStatus.OK)) {
 						return response.bodyToFlux(SAAExam.class).flatMapSequential(e -> this.getExam(person.getId(), e));
@@ -115,6 +116,11 @@ public class SAAExamService implements ExperienceConnector {
 	@Override
 	public void setView(String view) {
 		this.viewName = view;
+	}
+
+	@Override
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 
 }

@@ -42,10 +42,12 @@ public class ConnectorManager {
 				if(EntityType.person.label.equals(conf.getEntityType())) {
 					PersonConnector connector = (PersonConnector) context.getBean(c);
 					connector.setView(conf.getView());
+					connector.setUri(conf.getUri());
 					personMap.put(conf.getView(), connector);
 				} else {
 					ExperienceConnector connector = (ExperienceConnector) context.getBean(c);
 					connector.setView(conf.getView());
+					connector.setUri(conf.getUri());
 					String serviceKey = getServiceKey(conf.getEntityType(), conf.getView());
 					experienceMap.put(serviceKey, connector);					
 				}

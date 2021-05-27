@@ -27,12 +27,13 @@ public class EditStageService implements ExperienceConnector {
 	ExperienceRepository experienceRepository;
 	
 	String viewName;
+	String uri;
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	@Override
 	public Flux<Experience> refreshExp(Person person) {
-		WebClient client = WebClient.create("http://localhost:8080");
-		return client.get().uri("/edit/stage?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
+		WebClient client = WebClient.create(uri);
+		return client.get().uri("?fiscalCode=" + person.getFiscalCode()).accept(MediaType.APPLICATION_JSON)
 				.exchangeToFlux(response -> {
 					if (response.statusCode().equals(HttpStatus.OK)) {
 						return response.bodyToFlux(EditStage.class).flatMapSequential(e -> this.getStage(person.getId(), e));
@@ -87,6 +88,11 @@ public class EditStageService implements ExperienceConnector {
 	@Override
 	public void setView(String view) {
 		this.viewName = view;
+	}
+
+	@Override
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 
 }
