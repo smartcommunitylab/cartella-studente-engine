@@ -9,6 +9,7 @@ public class SAAStage {
 	private String location;
 	private String title;
 	private String type;
+	private String companyRef;
 	
 	public String getExtId() {
 		return extId;
@@ -57,5 +58,11 @@ public class SAAStage {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public String getCompanyRef() {
+		return companyRef;
+	}
+	public void setCompanyRef(String companyRef) {
+		this.companyRef = companyRef;
 	}
 }

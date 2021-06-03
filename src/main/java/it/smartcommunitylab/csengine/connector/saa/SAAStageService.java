@@ -18,6 +18,7 @@ import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.ExtRef;
 import it.smartcommunitylab.csengine.model.Person;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
+import it.smartcommunitylab.csengine.util.Utils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -25,6 +26,9 @@ import reactor.core.publisher.Mono;
 public class SAAStageService implements ExperienceConnector {
 	@Autowired
 	ExperienceRepository experienceRepository;
+	
+	@Autowired
+	SAACompanyService companyService;
 	
 	String viewName;
 	String uri;
@@ -46,10 +50,12 @@ public class SAAStageService implements ExperienceConnector {
 		Experience exp = new Experience();
 		exp.setPersonId(personId);
 		exp.setEntityType(EntityType.stage.label);
-		exp.getViews().put(EntityType.exp.label, getExpDataView(s));
 		exp.getViews().put(EntityType.stage.label, getStageDataView(s));
 		exp.getViews().put(viewName, getDataView(s));
-		return Mono.just(exp);
+		return getExpDataView(s).flatMap(view -> {
+			exp.getViews().put(EntityType.exp.label, view);
+			return Mono.just(exp);
+		});		
 	}
 	
 	private DataView getStageDataView(SAAStage s) {
@@ -62,12 +68,18 @@ public class SAAStageService implements ExperienceConnector {
 		return view;
 	}
 	
-	private DataView getExpDataView(SAAStage s) {
+	private Mono<DataView> getExpDataView(SAAStage s) {
 		DataView view = new DataView();
 		view.getAttributes().put(ExpAttr.dateFrom.label, s.getDateFrom());
 		view.getAttributes().put(ExpAttr.dateTo.label, s.getDateTo());
 		view.getAttributes().put(ExpAttr.title.label, s.getTitle());
-		return view;
+		if(Utils.isNotEmpty(s.getCompanyRef())) {
+			companyService.refreshOrganisation(s.getCompanyRef(), uri).flatMap(map -> {
+				view.getAttributes().put(ExpAttr.organisation.label, map);
+				return Mono.just(view);
+			});
+		}
+		return Mono.just(view);
 	}	
 	
 	private DataView getDataView(SAAStage s) {
@@ -81,6 +93,7 @@ public class SAAStageService implements ExperienceConnector {
 		view.getAttributes().put("type", s.getType());
 		view.getAttributes().put("duration", s.getDuration());
 		view.getAttributes().put("location", s.getLocation());
+		view.getAttributes().put("companyRef", s.getCompanyRef());
 		return view;
 	}
 
