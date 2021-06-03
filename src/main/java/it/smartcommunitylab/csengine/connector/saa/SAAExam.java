@@ -12,6 +12,10 @@ public class SAAExam {
 	private String schoolYear;
 	private String type;
 	private String instituteRef;
+	private boolean honour;
+	private String grade;
+	private boolean externalCandidate;
+	private boolean positiveResult;	
 	private List<SAACompetence> competences = new ArrayList<>();
 	
 	public String getExtId() {
@@ -67,5 +71,29 @@ public class SAAExam {
 	}
 	public void setCompetences(List<SAACompetence> competences) {
 		this.competences = competences;
+	}
+	public boolean isHonour() {
+		return honour;
+	}
+	public void setHonour(boolean honour) {
+		this.honour = honour;
+	}
+	public String getGrade() {
+		return grade;
+	}
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+	public boolean isExternalCandidate() {
+		return externalCandidate;
+	}
+	public void setExternalCandidate(boolean externalCandidate) {
+		this.externalCandidate = externalCandidate;
+	}
+	public boolean isPositiveResult() {
+		return positiveResult;
+	}
+	public void setPositiveResult(boolean positiveResult) {
+		this.positiveResult = positiveResult;
 	}
 }

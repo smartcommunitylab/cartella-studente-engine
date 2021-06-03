@@ -73,6 +73,10 @@ public class SAAExamService implements ExperienceConnector {
 		view.getAttributes().put("schoolYear", e.getSchoolYear());
 		view.getAttributes().put("type", e.getType());
 		view.getAttributes().put("instituteRef", e.getInstituteRef());
+		view.getAttributes().put("honour", e.isHonour());
+		view.getAttributes().put("grade", e.getGrade());
+		view.getAttributes().put("externalCandidate", e.isExternalCandidate());
+		view.getAttributes().put("positiveResult", e.isPositiveResult());
 		return view;
 	}
 	
@@ -80,6 +84,10 @@ public class SAAExamService implements ExperienceConnector {
 		DataView view = new DataView();
 		view.getAttributes().put(ExamAttr.qualification.label, e.getQualification());
 		view.getAttributes().put(ExamAttr.type.label, e.getType());
+		view.getAttributes().put(ExamAttr.honour.label, e.isHonour());
+		view.getAttributes().put(ExamAttr.grade.label, e.getGrade());
+		view.getAttributes().put(ExamAttr.result.label, e.isPositiveResult());
+		view.getAttributes().put(ExamAttr.externalCandidate.label, e.isExternalCandidate());
 		return view;
 	}
 
