@@ -17,16 +17,12 @@ import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.ExtRef;
 import it.smartcommunitylab.csengine.model.Person;
-import it.smartcommunitylab.csengine.repository.ExperienceRepository;
 import it.smartcommunitylab.csengine.util.Utils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
 public class SAAStageService implements ExperienceConnector {
-	@Autowired
-	ExperienceRepository experienceRepository;
-	
 	@Autowired
 	SAACompanyService companyService;
 	
