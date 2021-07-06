@@ -1,9 +1,9 @@
 package it.smartcommunitylab.csengine.common;
 
 public enum EnrollmentAttr {
-	schoolYear("schoolYear"),
-	course("course"),
-	classroom("classroom");
+	schoolYear("schoolYear"), //String
+	course("course"), //String
+	classroom("classroom"); //String
 	
 	public final String label;
 	

@@ -1,6 +1,6 @@
 package it.smartcommunitylab.csengine.model.dto;
 
-public class CompetenceDTO {
+public class CompetenceDTO extends ExperienceDTO {
 	private String uri;
 	private String concentType;
 	private String preferredLabel;

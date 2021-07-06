@@ -1,14 +1,14 @@
 package it.smartcommunitylab.csengine.common;
 
 public enum OrganisationAttr {
-	fiscalCode("fiscalCode"),
-	name("name"),
-	description("description"),
+	fiscalCode("fiscalCode"), //String
+	name("name"), //String
+	description("description"), //String
 	address("address"), //Address
 	location("location"), //GeoJsonPoint
-	phone("phone"),
-	email("email"),
-	pec("pec");
+	phone("phone"), //String
+	email("email"), //String
+	pec("pec"); //String
 	
 	public final String label;
 	

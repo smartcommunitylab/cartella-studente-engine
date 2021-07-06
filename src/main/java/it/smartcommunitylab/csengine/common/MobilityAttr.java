@@ -1,10 +1,10 @@
 package it.smartcommunitylab.csengine.common;
 
 public enum MobilityAttr {
-	type("type"),
-	duration("duration"),
+	type("type"), //String
+	duration("duration"), //String
 	address("address"), //Address
-	language("language");
+	language("language"); //String
 	
 	public final String label;
 	

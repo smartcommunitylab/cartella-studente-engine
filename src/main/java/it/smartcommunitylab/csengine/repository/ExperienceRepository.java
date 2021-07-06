@@ -9,6 +9,8 @@ import reactor.core.publisher.Mono;
 
 public interface ExperienceRepository extends ReactiveMongoRepository<Experience, String>, ExperienceRepositoryCustom {
 	Flux<Experience> findAllByPersonIdAndEntityType(String personId, String entityType);
+
+	Flux<Experience> findAllByPersonId(String personId);
 	
 	@Query(value="{'views.?0.identity.extUri':?1, 'views.?0.identity.origin':?2}")
 	Mono<Experience> findByExtRef(String view, String extUri, String origin);

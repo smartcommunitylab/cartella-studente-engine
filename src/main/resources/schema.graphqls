@@ -1,6 +1,10 @@
 type Query {
   personByFiscalCode(text: String): [Person]
-  getExams(personId: String): [Exam]
+  getExam(personId: String): [Exam]
+	getStage(personId: String): [Stage]
+	getCertification(personId: String): [Certification]
+	getMobility(personId: String): [Mobility]
+	getEnrollment(personId: String): [Enrollment]
 }
 
 type Person {
@@ -14,34 +18,124 @@ type Person {
 	email: String
 }
 
-type Exam {
+type Exp {
 	id: ID
+	entityType: String
 	title: String
 	description: String
-	entityType: String
+	location: GeoPoint
 	dateFrom: String
 	dateTo: String
 	validityFrom: String
 	validityTo: String
+	competences: [Competence]
+	organisation: Organisation
+}
+
+type Exam {
+	id: ID
+	entityType: String
+	title: String
+	description: String
+	location: GeoPoint
+	dateFrom: String
+	dateTo: String
+	validityFrom: String
+	validityTo: String
+	competences: [Competence]	
+	organisation: Organisation
 	type: String
 	qualification: String
 	honour: Boolean
 	grade: String
 	result: Boolean
 	externalCandidate: Boolean
-	place: Organisation
+}
+
+type Stage {
+	id: ID
+	entityType: String
+	title: String
+	description: String
+	location: GeoPoint
+	dateFrom: String
+	dateTo: String
+	validityFrom: String
+	validityTo: String
 	competences: [Competence]	
+	organisation: Organisation
+	type: String
+	duration: String
+	address: Address
+	contact: String
+}
+
+type Certification {
+	id: ID
+	entityType: String
+	title: String
+	description: String
+	location: GeoPoint
+	dateFrom: String
+	dateTo: String
+	validityFrom: String
+	validityTo: String
+	competences: [Competence]	
+	organisation: Organisation
+	type: String
+	duration: String
+	address: Address
+	contact: String
+	grade: String
+	language: String
+	level: String
+}
+
+type Mobility {
+	id: ID
+	entityType: String
+	title: String
+	description: String
+	location: GeoPoint
+	dateFrom: String
+	dateTo: String
+	validityFrom: String
+	validityTo: String
+	competences: [Competence]	
+	organisation: Organisation
+	type: String
+	duration: String
+	address: Address
+	language: String
+}
+
+type Enrollment {
+	id: ID
+	entityType: String
+	title: String
+	description: String
+	location: GeoPoint
+	dateFrom: String
+	dateTo: String
+	validityFrom: String
+	validityTo: String
+	competences: [Competence]	
+	organisation: Organisation
+	schoolYear: String
+	course: String
+	classroom: String
 }
 
 type Organisation {
 	id: ID
+	fiscalCode: String
 	name: String
 	description: String
 	address: Address
+	location: GeoPoint
 	phone: String
 	email: String
 	pec: String
-	fiscalCode: String
 }
 
 type Address {
@@ -58,4 +152,13 @@ type Competence {
 	concentType: String
 	preferredLabel: String
 	altLabel: String
+	validityFrom: String
+	validityTo: String
+	assessment: String
+	certifyingOrganisation: Organisation
+}
+
+type GeoPoint {
+	latitude: Float
+	longitude: Float
 }

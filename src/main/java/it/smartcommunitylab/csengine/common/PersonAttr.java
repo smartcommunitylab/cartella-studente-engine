@@ -1,13 +1,13 @@
 package it.smartcommunitylab.csengine.common;
 
 public enum PersonAttr {
-	fiscalCode("fiscalCode"),
-	name("name"),
-	surname("surname"),
+	fiscalCode("fiscalCode"), //String
+	name("name"), //String
+	surname("surname"), //String
 	address("address"), //Address
-	birthdate("birthdate"),
-	phone("phone"),
-	email("email");
+	birthdate("birthdate"), //String
+	phone("phone"), //String
+	email("email"); //String
 	
 	public final String label;
 	

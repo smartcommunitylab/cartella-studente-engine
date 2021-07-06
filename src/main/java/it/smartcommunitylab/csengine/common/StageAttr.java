@@ -1,10 +1,10 @@
 package it.smartcommunitylab.csengine.common;
 
 public enum StageAttr {
-	type("type"),
-	duration("duration"),
+	type("type"), //String
+	duration("duration"), //String
 	address("address"), //Address
-	contact("contact");
+	contact("contact"); //String
 	
 	public final String label;
 	

@@ -4,7 +4,10 @@ public enum EntityType {
 	person("person"),
 	exp("exp"),
 	stage("stage"),
-	exam("exam");
+	exam("exam"),
+	certification("certification"),
+	mobility("mobility"),
+	enrollment("enrollment");
 	
 	public final String label;
 	

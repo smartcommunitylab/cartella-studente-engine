@@ -17,10 +17,14 @@ import it.smartcommunitylab.csengine.common.OrganisationAttr;
 import it.smartcommunitylab.csengine.model.Address;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
+import it.smartcommunitylab.csengine.model.dto.CertificationDTO;
 import it.smartcommunitylab.csengine.model.dto.CompetenceDTO;
+import it.smartcommunitylab.csengine.model.dto.EnrollmentDTO;
 import it.smartcommunitylab.csengine.model.dto.ExamDTO;
 import it.smartcommunitylab.csengine.model.dto.ExperienceDTO;
+import it.smartcommunitylab.csengine.model.dto.MobilityDTO;
 import it.smartcommunitylab.csengine.model.dto.OrganisationDTO;
+import it.smartcommunitylab.csengine.model.dto.StageDTO;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
 import it.smartcommunitylab.csengine.util.Utils;
 import reactor.core.publisher.Flux;
@@ -31,7 +35,16 @@ public class GraphQLExperienceDataFetcher {
 	@Autowired
 	ExperienceRepository experienceRepository;
 	
-	public DataFetcher<Stream<ExamDTO>> searchExamsByPersonId() {
+	public DataFetcher<Stream<ExperienceDTO>> searchExpByPersonId() {
+		return dataFetchingEnvironment -> {
+			String personId = dataFetchingEnvironment.getArgument("personId");
+			return experienceRepository.findAllByPersonId(personId)
+					.map(this::getExpDTO)
+					.toStream();
+		};
+  }
+
+	public DataFetcher<Stream<ExamDTO>> searchExamByPersonId() {
 		return dataFetchingEnvironment -> {
 			String personId = dataFetchingEnvironment.getArgument("personId");
 			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.exam.label)
@@ -39,7 +52,43 @@ public class GraphQLExperienceDataFetcher {
 					.toStream();
 		};
 	}
-	
+
+  public DataFetcher<Stream<StageDTO>> searchStageByPersonId() {
+		return dataFetchingEnvironment -> {
+			String personId = dataFetchingEnvironment.getArgument("personId");
+			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.stage.label)
+					.map(this::getStageDTO)
+					.toStream();
+		};
+  }
+
+	public DataFetcher<Stream<CertificationDTO>> searchCertificationByPersonId() {
+		return dataFetchingEnvironment -> {
+			String personId = dataFetchingEnvironment.getArgument("personId");
+			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.certification.label)
+					.map(this::getCertificationDTO)
+					.toStream();
+		};
+  }
+
+	public DataFetcher<Stream<MobilityDTO>> searchMobilityByPersonId() {
+		return dataFetchingEnvironment -> {
+			String personId = dataFetchingEnvironment.getArgument("personId");
+			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.mobility.label)
+					.map(this::getMobilityDTO)
+					.toStream();
+		};
+  }
+
+	public DataFetcher<Stream<EnrollmentDTO>> searchEnrollmentByPersonId() {
+		return dataFetchingEnvironment -> {
+			String personId = dataFetchingEnvironment.getArgument("personId");
+			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.mobility.label)
+					.map(this::getEnrollmentDTO)
+					.toStream();
+		};
+  }
+
 	public DataFetcher<OrganisationDTO> getOrganisation() {
 		return dataFetchingEnvironment -> {
 			ExperienceDTO exp = dataFetchingEnvironment.getSource();
@@ -53,7 +102,7 @@ public class GraphQLExperienceDataFetcher {
 			return org.getAddress();
 		};
 	}
-	
+
 	public DataFetcher<Stream<CompetenceDTO>> getCompetences() {
 		return dataFetchingEnvironment -> {
 			ExperienceDTO exp = dataFetchingEnvironment.getSource();
@@ -61,6 +110,12 @@ public class GraphQLExperienceDataFetcher {
 		};
 	}
 	
+	private ExperienceDTO getExpDTO(Experience e) {
+		//TODO getExpDTO
+		ExperienceDTO dto = new ExperienceDTO();
+		return dto;
+	}
+
 	private ExamDTO getExamDTO(Experience e) {
 		ExamDTO dto = new ExamDTO();
 		DataView examView = e.getViews().get(EntityType.exam.label);
@@ -82,6 +137,30 @@ public class GraphQLExperienceDataFetcher {
 			dto.setExternalCandidate((Boolean) examView.getAttributes().get(ExamAttr.externalCandidate.label));			
 		}
 		
+		return dto;
+	}
+
+	private StageDTO getStageDTO(Experience e) {
+		//TODO getStageDTO
+		StageDTO dto = new StageDTO();
+		return dto;
+	}
+
+	private CertificationDTO getCertificationDTO(Experience e) {
+		//TODO getCertificationDTO
+		CertificationDTO dto = new CertificationDTO();
+		return dto;
+	}
+
+	private MobilityDTO getMobilityDTO(Experience e) {
+		//TODO getMobilityDTO
+		MobilityDTO dto = new MobilityDTO();
+		return dto;
+	}
+
+	private EnrollmentDTO getEnrollmentDTO(Experience e) {
+		//TODO getEnrollmentDTO
+		EnrollmentDTO dto = new EnrollmentDTO();
 		return dto;
 	}
 	
@@ -127,5 +206,10 @@ public class GraphQLExperienceDataFetcher {
 		dto.setAltLabel(Utils.getLabel((Map<String, String>) map.get(CompetenceAttr.altLabel.label), lang));
 		return dto;
 	}
+
+
+
+
+
 	
 }

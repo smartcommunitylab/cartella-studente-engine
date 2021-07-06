@@ -1,13 +1,13 @@
 package it.smartcommunitylab.csengine.common;
 
 public enum CertificationAttr {
-	type("type"),
-	duration("duration"),
+	type("type"), //String
+	duration("duration"), //String
 	address("address"), //Address
-	contact("contact"),
-	grade("grade"),
-	language("language"),
-	level("level");
+	contact("contact"), //String
+	grade("grade"), //String
+	language("language"), //String
+	level("level"); //String
 	
 	public final String label;
 	

@@ -1,13 +1,13 @@
 package it.smartcommunitylab.csengine.common;
 
 public enum ExpAttr {
-	title("title"),
-	description("description"),
-	location("location"), //GeoJsonPoint
-	dateFrom("dateFrom"),
-	dateTo("dateTo"),
-	validityFrom("validityFrom"),
-	validityTo("validityTo"),
+	title("title"), //String
+	description("description"), //String
+	location("location"), //GeoPoint
+	dateFrom("dateFrom"), //String
+	dateTo("dateTo"), //String
+	validityFrom("validityFrom"), //String
+	validityTo("validityTo"), //String
 	competences("competences"), //List<Compatence_attr>
 	organisation("organisation"); //Organisation_attr
 	
