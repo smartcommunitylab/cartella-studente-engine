@@ -109,6 +109,13 @@ public class GraphQLExperienceDataFetcher {
 			return experienceRepository.findById(exp.getId()).flatMapMany(this::getCompetenceDTO).toStream();
 		};
 	}
+
+	public DataFetcher<Address> getAddress(String view, String attr) {
+		return dataFetchingEnvironment -> {
+			ExperienceDTO exp = dataFetchingEnvironment.getSource();
+			return experienceRepository.findById(exp.getId()).flatMap(e -> {return getAddress(e, view, attr);}).block();
+		};
+	}
 	
 	private ExperienceDTO getExpDTO(Experience e) {
 		//TODO getExpDTO
@@ -207,9 +214,14 @@ public class GraphQLExperienceDataFetcher {
 		return dto;
 	}
 
-
-
-
-
+	private Mono<Address> getAddress(Experience e, String view, String attr) {
+		if(e.getViews().containsKey(view)) {
+			DataView dataView = e.getViews().get(view);
+			if(dataView.getAttributes().containsKey(attr)) {
+				return Mono.just((Address) dataView.getAttributes().get(attr));
+			}
+		}
+		return Mono.empty();
+	}
 	
 }

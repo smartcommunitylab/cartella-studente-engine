@@ -20,6 +20,8 @@ import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
+import it.smartcommunitylab.csengine.common.EntityType;
+import it.smartcommunitylab.csengine.common.StageAttr;
 import it.smartcommunitylab.csengine.graphql.fetcher.GraphQLExperienceDataFetcher;
 import it.smartcommunitylab.csengine.graphql.fetcher.GraphQLPersonDataFetcher;
 
@@ -77,6 +79,7 @@ public class GraphQLProvider {
 		    .type(newTypeWiring("Stage")
 		    		.dataFetcher("organisation", experienceDataFetcher.getOrganisation())
 		    		.dataFetcher("competences", experienceDataFetcher.getCompetences())
+						.dataFetcher("address", experienceDataFetcher.getAddress(EntityType.stage.label, StageAttr.address.label))
 		    )    		
 		    .type(newTypeWiring("Organisation")
 		    		.dataFetcher("address", experienceDataFetcher.getOrganisationAddress())
