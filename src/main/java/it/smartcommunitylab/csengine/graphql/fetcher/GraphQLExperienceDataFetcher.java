@@ -17,6 +17,7 @@ import it.smartcommunitylab.csengine.common.OrganisationAttr;
 import it.smartcommunitylab.csengine.model.Address;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
+import it.smartcommunitylab.csengine.model.GeoPoint;
 import it.smartcommunitylab.csengine.model.dto.CertificationDTO;
 import it.smartcommunitylab.csengine.model.dto.CompetenceDTO;
 import it.smartcommunitylab.csengine.model.dto.EnrollmentDTO;
@@ -117,24 +118,32 @@ public class GraphQLExperienceDataFetcher {
 		};
 	}
 	
+	private void fillExpDTO(ExperienceDTO dto, Experience e) {
+		DataView expView = e.getViews().get(EntityType.exp.label);
+		if(expView != null) {
+			dto.setId(e.getId());
+			dto.setEntityType(e.getEntityType());
+			dto.setPersonId(e.getPersonId());
+			dto.setTitle((String) expView.getAttributes().get(ExpAttr.title.label));
+			dto.setDescription((String) expView.getAttributes().get(ExpAttr.description.label));
+			dto.setLocation((GeoPoint) expView.getAttributes().get(ExpAttr.location.label));
+			dto.setDateFrom((String) expView.getAttributes().get(ExpAttr.dateFrom.label));
+			dto.setDateTo((String) expView.getAttributes().get(ExpAttr.dateTo.label));
+			dto.setValidityFrom((String) expView.getAttributes().get(ExpAttr.validityFrom.label));
+			dto.setValidityTo((String) expView.getAttributes().get(ExpAttr.validityTo.label));
+		}
+	} 
+
 	private ExperienceDTO getExpDTO(Experience e) {
-		//TODO getExpDTO
 		ExperienceDTO dto = new ExperienceDTO();
+		fillExpDTO(dto, e);
 		return dto;
 	}
 
 	private ExamDTO getExamDTO(Experience e) {
 		ExamDTO dto = new ExamDTO();
-		DataView examView = e.getViews().get(EntityType.exam.label);
-		DataView expView = e.getViews().get(EntityType.exp.label);
-		
-		if(expView != null) {
-			dto.setId(e.getId());
-			dto.setTitle((String) expView.getAttributes().get(ExpAttr.title.label));
-			dto.setDateFrom((String) expView.getAttributes().get(ExpAttr.dateFrom.label));
-			dto.setDateTo((String) expView.getAttributes().get(ExpAttr.dateTo.label));
-		}
-		
+		fillExpDTO(dto, e);
+		DataView examView = e.getViews().get(EntityType.exam.label);	
 		if(examView != null) {
 			dto.setType((String) examView.getAttributes().get(ExamAttr.type.label));
 			dto.setQualification((String) examView.getAttributes().get(ExamAttr.qualification.label));
@@ -143,7 +152,6 @@ public class GraphQLExperienceDataFetcher {
 			dto.setResult((Boolean) examView.getAttributes().get(ExamAttr.result.label));
 			dto.setExternalCandidate((Boolean) examView.getAttributes().get(ExamAttr.externalCandidate.label));			
 		}
-		
 		return dto;
 	}
 

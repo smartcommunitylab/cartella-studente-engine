@@ -1,19 +1,18 @@
 package it.smartcommunitylab.csengine.model.dto;
 
-import java.util.ArrayList;
-import java.util.List;
+import it.smartcommunitylab.csengine.model.GeoPoint;
 
 public class ExperienceDTO {
 	private String id;
 	private String personId;
+	private String entityType;		
 	private String title;
 	private String description;
-	private String entityType;		
+	private GeoPoint location;
 	private String dateFrom;
 	private String dateTo;
 	private String validityFrom;
 	private String validityTo;
-	private List<CompetenceDTO> competences = new ArrayList<>();
 
 	public String getId() {
 		return id;
@@ -87,12 +86,12 @@ public class ExperienceDTO {
 		this.validityTo = validityTo;
 	}
 
-	public List<CompetenceDTO> getCompetences() {
-		return competences;
+	public GeoPoint getLocation() {
+		return location;
 	}
 
-	public void setCompetences(List<CompetenceDTO> competences) {
-		this.competences = competences;
+	public void setLocation(GeoPoint location) {
+		this.location = location;
 	}
 
 }
