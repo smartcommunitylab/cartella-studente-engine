@@ -22,6 +22,20 @@
 			"uri": "http://localhost:8080/cse/edit"
 		},
 		{
+			"entityType": "certification",
+			"view": "saa_1",
+			"priority": 1,
+			"implementor": "it.smartcommunitylab.csengine.connector.saa.SAACertificationService",
+			"uri": "http://localhost:8282/saa"
+		},
+		{
+			"entityType": "enrollment",
+			"view": "saa_1",
+			"priority": 1,
+			"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAEnrollmentService",
+			"uri": "http://localhost:8282/saa"
+		},
+		{
 			"entityType": "person",
 			"view": "saa_1",
 			"priority": 1,

@@ -268,7 +268,7 @@ public class GraphQLExperienceDataFetcher {
 		return dto;
 	}
 
-	private Mono<Address> getAddress(Experience e, String view, String attr) {
+	/*private Mono<Address> getAddress(Experience e, String view, String attr) {
 		if(e.getViews().containsKey(view)) {
 			DataView dataView = e.getViews().get(view);
 			if(dataView.getAttributes().containsKey(attr)) {
@@ -276,6 +276,6 @@ public class GraphQLExperienceDataFetcher {
 			}
 		}
 		return Mono.empty();
-	}
+	}*/
 	
 }

@@ -48,8 +48,8 @@ public class SAAEnrollmentService implements ExperienceConnector {
 	private Mono<Experience> getEnrollment(String personId, SAAEnrollment e) {
 		Experience exp = new Experience();
 		exp.setPersonId(personId);
-		exp.setEntityType(EntityType.exam.label);
-		exp.getViews().put(EntityType.exam.label, getEnrollmentDataView(e));
+		exp.setEntityType(EntityType.enrollment.label);
+		exp.getViews().put(EntityType.enrollment.label, getEnrollmentDataView(e));
 		exp.getViews().put(viewName, getDataView(e));
 		return getExpDataView(e).flatMap(view -> {
 			exp.getViews().put(EntityType.exp.label, view);

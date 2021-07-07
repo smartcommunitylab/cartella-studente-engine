@@ -32,7 +32,7 @@ public class TestController {
 		List<EditStage> list = new ArrayList<>();
 		EditStage s = new EditStage();
 		String id = RandomStringUtils.randomNumeric(8);
-		String saaId = fiscalCode + "_stage_1";
+		String saaId = "stage111";
 		int giorno = random.nextInt(max - min) + min;
 		s.setExtId(id);
 		s.setOrigin("INFOTNISTRUZIONE");

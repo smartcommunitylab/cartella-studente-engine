@@ -45,8 +45,8 @@ public class SAACertificationService implements ExperienceConnector {
 	private Mono<Experience> getCertification(String personId, SAACertification cert) {
 		Experience exp = new Experience();
 		exp.setPersonId(personId);
-		exp.setEntityType(EntityType.stage.label);
-		exp.getViews().put(EntityType.stage.label, getCertificationDataView(cert));
+		exp.setEntityType(EntityType.certification.label);
+		exp.getViews().put(EntityType.certification.label, getCertificationDataView(cert));
 		exp.getViews().put(viewName, getDataView(cert));
 		return getExpDataView(cert).flatMap(view -> {
 			exp.getViews().put(EntityType.exp.label, view);
