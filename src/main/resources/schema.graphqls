@@ -1,5 +1,6 @@
 type Query {
   personByFiscalCode(text: String): [Person]
+	getExp(personId: String): [Exp]
   getExam(personId: String): [Exam]
 	getStage(personId: String): [Stage]
 	getCertification(personId: String): [Certification]

@@ -1,6 +1,8 @@
 package it.smartcommunitylab.csengine.graphql.fetcher;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -115,20 +117,31 @@ public class GraphQLExperienceDataFetcher {
 		};
 	}
 
-	/*public DataFetcher<Address> getAddress(String view, String attr) {
-		return dataFetchingEnvironment -> {
-			ExperienceDTO exp = dataFetchingEnvironment.getSource();
-			return experienceRepository.findById(exp.getId()).flatMap(e -> {return getAddress(e, view, attr);}).block();
-		};
-	}*/
-
 	public DataFetcher<Address> getAddress(String attr) {
 		return dataFetchingEnvironment -> {
 			Object source = dataFetchingEnvironment.getSource();
-			Class<? extends Object> c = source.getClass();
-			Field field = c.getDeclaredField(attr);
-			if(field.canAccess(source)) {
-				return (Address) field.get(source);
+			try {
+				PropertyDescriptor pd = new PropertyDescriptor(attr, source.getClass());
+				if(pd != null) {
+					return (Address) pd.getReadMethod().invoke(source);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		};
+	}
+
+	public DataFetcher<GeoPoint> getGeoPoint(String attr) {
+		return dataFetchingEnvironment -> {
+			Object source = dataFetchingEnvironment.getSource();
+			try {
+				PropertyDescriptor pd = new PropertyDescriptor(attr, source.getClass());
+				if(pd != null) {
+					return (GeoPoint) pd.getReadMethod().invoke(source);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			return null;
 		};
@@ -179,6 +192,7 @@ public class GraphQLExperienceDataFetcher {
 			dto.setType((String) view.getAttributes().get(StageAttr.type.label));
 			dto.setDuration((String) view.getAttributes().get(StageAttr.duration.label));
 			dto.setContact((String) view.getAttributes().get(StageAttr.contact.label));
+			dto.setAddress((Address) view.getAttributes().get(StageAttr.address.label));
 		}
 		return dto;
 	}
@@ -268,14 +282,4 @@ public class GraphQLExperienceDataFetcher {
 		return dto;
 	}
 
-	/*private Mono<Address> getAddress(Experience e, String view, String attr) {
-		if(e.getViews().containsKey(view)) {
-			DataView dataView = e.getViews().get(view);
-			if(dataView.getAttributes().containsKey(attr)) {
-				return Mono.just((Address) dataView.getAttributes().get(attr));
-			}
-		}
-		return Mono.empty();
-	}*/
-	
 }

@@ -20,6 +20,8 @@ import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
+import it.smartcommunitylab.csengine.common.CertificationAttr;
+import it.smartcommunitylab.csengine.common.ExpAttr;
 import it.smartcommunitylab.csengine.common.StageAttr;
 import it.smartcommunitylab.csengine.graphql.fetcher.GraphQLExperienceDataFetcher;
 import it.smartcommunitylab.csengine.graphql.fetcher.GraphQLPersonDataFetcher;
@@ -70,6 +72,7 @@ public class GraphQLProvider {
 		    .type(newTypeWiring("Exp")
 		    		.dataFetcher("organisation", experienceDataFetcher.getOrganisation())
 		    		.dataFetcher("competences", experienceDataFetcher.getCompetences())
+						.dataFetcher("location", experienceDataFetcher.getGeoPoint(ExpAttr.location.label))
 		    )    		
 		    .type(newTypeWiring("Exam")
 		    		.dataFetcher("organisation", experienceDataFetcher.getOrganisation())
@@ -83,7 +86,7 @@ public class GraphQLProvider {
 		    .type(newTypeWiring("Certification")
 		    		.dataFetcher("organisation", experienceDataFetcher.getOrganisation())
 		    		.dataFetcher("competences", experienceDataFetcher.getCompetences())
-						.dataFetcher("address", experienceDataFetcher.getAddress(StageAttr.address.label))
+						.dataFetcher("address", experienceDataFetcher.getAddress(CertificationAttr.address.label))
 		    )    		
 		    .type(newTypeWiring("Enrollment")
 		    		.dataFetcher("organisation", experienceDataFetcher.getOrganisation())
