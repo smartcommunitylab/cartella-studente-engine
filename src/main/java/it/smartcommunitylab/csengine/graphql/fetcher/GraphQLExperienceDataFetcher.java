@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import graphql.schema.DataFetcher;
 import it.smartcommunitylab.csengine.common.CertificationAttr;
 import it.smartcommunitylab.csengine.common.CompetenceAttr;
+import it.smartcommunitylab.csengine.common.EnrollmentAttr;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.common.ExpAttr;
@@ -188,12 +189,23 @@ public class GraphQLExperienceDataFetcher {
 	private MobilityDTO getMobilityDTO(Experience e) {
 		//TODO getMobilityDTO
 		MobilityDTO dto = new MobilityDTO();
+		fillExpDTO(dto, e);
+		DataView view = e.getViews().get(EntityType.certification.label);
+		if(view != null) {
+
+		}
 		return dto;
 	}
 
 	private EnrollmentDTO getEnrollmentDTO(Experience e) {
-		//TODO getEnrollmentDTO
 		EnrollmentDTO dto = new EnrollmentDTO();
+		fillExpDTO(dto, e);
+		DataView view = e.getViews().get(EntityType.certification.label);
+		if(view != null) {
+			dto.setSchoolYear((String) view.getAttributes().get(EnrollmentAttr.schoolYear.label));
+			dto.setCourse((String) view.getAttributes().get(EnrollmentAttr.course.label));
+			dto.setClassroom((String) view.getAttributes().get(EnrollmentAttr.classroom.label));
+		}
 		return dto;
 	}
 	
