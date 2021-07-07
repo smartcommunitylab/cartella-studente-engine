@@ -1,5 +1,6 @@
 package it.smartcommunitylab.csengine.graphql.fetcher;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -114,13 +115,25 @@ public class GraphQLExperienceDataFetcher {
 		};
 	}
 
-	public DataFetcher<Address> getAddress(String view, String attr) {
+	/*public DataFetcher<Address> getAddress(String view, String attr) {
 		return dataFetchingEnvironment -> {
 			ExperienceDTO exp = dataFetchingEnvironment.getSource();
 			return experienceRepository.findById(exp.getId()).flatMap(e -> {return getAddress(e, view, attr);}).block();
 		};
+	}*/
+
+	public DataFetcher<Address> getAddress(String attr) {
+		return dataFetchingEnvironment -> {
+			Object source = dataFetchingEnvironment.getSource();
+			Class<? extends Object> c = source.getClass();
+			Field field = c.getDeclaredField(attr);
+			if(field.canAccess(source)) {
+				return (Address) field.get(source);
+			}
+			return null;
+		};
 	}
-	
+
 	private void fillExpDTO(ExperienceDTO dto, Experience e) {
 		DataView expView = e.getViews().get(EntityType.exp.label);
 		if(expView != null) {
