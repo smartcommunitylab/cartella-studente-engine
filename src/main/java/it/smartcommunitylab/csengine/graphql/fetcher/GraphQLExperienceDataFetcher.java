@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import graphql.schema.DataFetcher;
+import it.smartcommunitylab.csengine.common.CertificationAttr;
 import it.smartcommunitylab.csengine.common.CompetenceAttr;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
@@ -169,8 +170,18 @@ public class GraphQLExperienceDataFetcher {
 	}
 
 	private CertificationDTO getCertificationDTO(Experience e) {
-		//TODO getCertificationDTO
 		CertificationDTO dto = new CertificationDTO();
+		fillExpDTO(dto, e);
+		DataView view = e.getViews().get(EntityType.certification.label);
+		if(view != null) {
+			dto.setType((String) view.getAttributes().get(CertificationAttr.type.label));
+			dto.setDuration((String) view.getAttributes().get(CertificationAttr.duration.label));
+			dto.setAddress((Address) view.getAttributes().get(CertificationAttr.address.label));
+			dto.setContact((String) view.getAttributes().get(CertificationAttr.contact.label));
+			dto.setGrade((String) view.getAttributes().get(CertificationAttr.grade.label));
+			dto.setLanguage((String) view.getAttributes().get(CertificationAttr.language.label));
+			dto.setLevel((String) view.getAttributes().get(CertificationAttr.level.label));
+		}
 		return dto;
 	}
 
