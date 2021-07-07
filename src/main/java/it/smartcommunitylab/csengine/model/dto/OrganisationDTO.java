@@ -1,16 +1,18 @@
 package it.smartcommunitylab.csengine.model.dto;
 
 import it.smartcommunitylab.csengine.model.Address;
+import it.smartcommunitylab.csengine.model.GeoPoint;
 
 public class OrganisationDTO {
 	private String id;
+	private String fiscalCode; 
 	private String name;
 	private String description;
 	private Address address;
+	private GeoPoint location;
 	private String phone;
 	private String email;
 	private String pec;
-	private String fiscalCode; 
 	
 	public String getId() {
 		return id;
@@ -61,6 +63,13 @@ public class OrganisationDTO {
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+	
+	public GeoPoint getLocation() {
+		return location;
+	}
+	public void setLocation(GeoPoint location) {
+		this.location = location;
 	}
 	
 }

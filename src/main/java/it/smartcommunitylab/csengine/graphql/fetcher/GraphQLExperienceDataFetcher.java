@@ -202,9 +202,12 @@ public class GraphQLExperienceDataFetcher {
 		OrganisationDTO dto = new OrganisationDTO();
 		dto.setFiscalCode((String) view.get(OrganisationAttr.fiscalCode.label));
 		dto.setName((String) view.get(OrganisationAttr.name.label));
+		dto.setDescription((String) view.get(OrganisationAttr.description.label));
+		dto.setAddress((Address) view.get(OrganisationAttr.address.label));
+		dto.setLocation((GeoPoint) view.get(OrganisationAttr.location.label));
+		dto.setPhone((String) view.get(OrganisationAttr.phone.label));
 		dto.setEmail((String) view.get(OrganisationAttr.email.label));
 		dto.setPec((String) view.get(OrganisationAttr.pec.label));
-		dto.setAddress((Address) view.get(OrganisationAttr.address.label));
 		return dto;
 	}
 	
