@@ -1,8 +1,6 @@
 package it.smartcommunitylab.csengine.graphql.fetcher;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -279,6 +277,7 @@ public class GraphQLExperienceDataFetcher {
 		dto.setConcentType((String) map.get(CompetenceAttr.concentType.label));
 		dto.setPreferredLabel(Utils.getLabel((Map<String, String>) map.get(CompetenceAttr.preferredLabel.label), lang));
 		dto.setAltLabel(Utils.getLabel((Map<String, String>) map.get(CompetenceAttr.altLabel.label), lang));
+		dto.setDescription(Utils.getLabel((Map<String, String>) map.get(CompetenceAttr.description.label), lang));
 		return dto;
 	}
 

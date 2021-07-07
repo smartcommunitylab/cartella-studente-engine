@@ -1,6 +1,10 @@
 package it.smartcommunitylab.csengine.connector.saa;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import it.smartcommunitylab.csengine.common.CompetenceAttr;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExpAttr;
 import it.smartcommunitylab.csengine.common.StageAttr;
@@ -75,8 +80,23 @@ public class SAAStageService implements ExperienceConnector {
 				return Mono.just(view);
 			});
 		}
+		List<Map<String, Object>> competences = new ArrayList<>();
+		for(SAACompetence competence : s.getCompetences()) {
+			competences.add(getCompetenceMap(competence));
+		}
+		view.getAttributes().put(ExpAttr.competences.label, competences);
 		return Mono.just(view);
 	}	
+
+	private Map<String, Object> getCompetenceMap(SAACompetence c) {
+		Map<String, Object> view = new HashMap<>();
+		view.put(CompetenceAttr.uri.label, c.getUri());
+		view.put(CompetenceAttr.concentType.label, c.getConcentType());
+		view.put(CompetenceAttr.preferredLabel.label, c.getPreferredLabel());
+		view.put(CompetenceAttr.altLabel.label, c.getAltLabel());
+		view.put(CompetenceAttr.description.label, c.getDescription());
+		return view;
+	}
 	
 	private DataView getDataView(SAAStage s) {
 		ExtRef identity = new ExtRef(s.getExtId(), s.getOrigin());

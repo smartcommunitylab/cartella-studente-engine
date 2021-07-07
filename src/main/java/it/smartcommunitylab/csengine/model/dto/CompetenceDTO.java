@@ -5,6 +5,7 @@ public class CompetenceDTO extends ExperienceDTO {
 	private String concentType;
 	private String preferredLabel;
 	private String altLabel;
+	private String description;
 
 	public String getUri() {
 		return uri;
@@ -36,6 +37,14 @@ public class CompetenceDTO extends ExperienceDTO {
 
 	public void setAltLabel(String altLabel) {
 		this.altLabel = altLabel;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

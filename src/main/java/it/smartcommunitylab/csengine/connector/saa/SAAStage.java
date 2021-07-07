@@ -1,5 +1,8 @@
 package it.smartcommunitylab.csengine.connector.saa;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SAAStage {
 	private String extId;
 	private String origin;
@@ -10,6 +13,7 @@ public class SAAStage {
 	private String title;
 	private String type;
 	private String companyRef;
+	private List<SAACompetence> competences = new ArrayList<>();
 	
 	public String getExtId() {
 		return extId;
@@ -65,4 +69,11 @@ public class SAAStage {
 	public void setCompanyRef(String companyRef) {
 		this.companyRef = companyRef;
 	}
+	public List<SAACompetence> getCompetences() {
+		return competences;
+	}
+	public void setCompetences(List<SAACompetence> competences) {
+		this.competences = competences;
+	}
+	
 }

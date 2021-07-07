@@ -8,6 +8,7 @@ public class SAACompetence {
 	private String concentType;
 	private Map<String, String> preferredLabel = new HashMap<>();
 	private Map<String, String> altLabel = new HashMap<>();
+	private Map<String, String> description = new HashMap<>();
 
 	public String getUri() {
 		return uri;
@@ -39,6 +40,14 @@ public class SAACompetence {
 
 	public void setAltLabel(Map<String, String> altLabel) {
 		this.altLabel = altLabel;
+	}
+
+	public Map<String, String> getDescription() {
+		return description;
+	}
+
+	public void setDescription(Map<String, String> description) {
+		this.description = description;
 	}
 
 

@@ -153,6 +153,7 @@ type Competence {
 	concentType: String
 	preferredLabel: String
 	altLabel: String
+	description: String
 	validityFrom: String
 	validityTo: String
 	assessment: String

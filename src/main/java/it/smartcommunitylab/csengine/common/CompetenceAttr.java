@@ -5,6 +5,7 @@ public enum CompetenceAttr {
 	concentType("concentType"), 
 	preferredLabel("preferredLabel"), //Map<String, String> (lang, value)
 	altLabel("altLabel"), //Map<String, String> (lang, value)
+	description("description"), //Map<String, String> (lang, value)
 	validityFrom("validityFrom"), //String
 	validityTo("validityTo"), //String
 	assessment("assessment"), //String
