@@ -14,6 +14,7 @@ import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.common.ExpAttr;
 import it.smartcommunitylab.csengine.common.OrganisationAttr;
+import it.smartcommunitylab.csengine.common.StageAttr;
 import it.smartcommunitylab.csengine.model.Address;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
@@ -156,8 +157,14 @@ public class GraphQLExperienceDataFetcher {
 	}
 
 	private StageDTO getStageDTO(Experience e) {
-		//TODO getStageDTO
 		StageDTO dto = new StageDTO();
+		fillExpDTO(dto, e);
+		DataView view = e.getViews().get(EntityType.stage.label);
+		if(view != null) {
+			dto.setType((String) view.getAttributes().get(StageAttr.type.label));
+			dto.setDuration((String) view.getAttributes().get(StageAttr.duration.label));
+			dto.setContact((String) view.getAttributes().get(StageAttr.contact.label));
+		}
 		return dto;
 	}
 
