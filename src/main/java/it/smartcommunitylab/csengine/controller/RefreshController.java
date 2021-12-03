@@ -20,12 +20,12 @@ public class RefreshController {
 	@Autowired
 	ExperienceService experienceService;
 
-	@GetMapping("/person/refresh")
+	@GetMapping("/api/person/refresh")
 	public Mono<Person> refreshPerson(@RequestParam String fiscalCode) {
 		return personService.refreshPerson(fiscalCode);
 	}
 	
-	@GetMapping("/exp/refresh")
+	@GetMapping("/api/exp/refresh")
 	public Flux<Experience> refreshExp(
 			@RequestParam String fiscalCode,
 			@RequestParam String entityType,
