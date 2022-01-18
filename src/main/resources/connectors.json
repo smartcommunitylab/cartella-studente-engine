@@ -8,18 +8,18 @@
 			"uri": "http://localhost:8282/saa/education"
 		},
 		{
-			"entityType": "educatinalActivity",
+			"entityType": "educationalActivity",
 			"view": "saa_1",
 			"priority": 1,
 			"implementor": "it.smartcommunitylab.csengine.connector.impl.GenericExperienceConnector",
-			"uri": "http://localhost:8282/saa/educatinalActivity"
+			"uri": "http://localhost:8282/saa/educationalActivity"
 		},
 		{
-			"entityType": "educatinalActivity",
+			"entityType": "educationalActivity",
 			"view": "edit_1",
 			"priority": 2,
 			"implementor": "it.smartcommunitylab.csengine.connector.impl.GenericExperienceConnector",
-			"uri": "http://localhost:8383/edit/educatinalActivity"
+			"uri": "http://localhost:8383/edit/educationalActivity"
 		},
 		{
 			"entityType": "certification",
@@ -37,7 +37,7 @@
 		}
 	],
 	"identityMap": {
-		"educatinalActivity": [
+		"educationalActivity": [
 			{
 				"saa_1": "extId",
 				"edit_1": "failuretest"

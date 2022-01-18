@@ -4,7 +4,7 @@ public enum EntityType {
 	person("person"),
 	exp("exp"),
 	certification("certification"),
-	educatinalActivity("educatinalActivity"),
+	educationalActivity("educationalActivity"),
 	education("education");
 	
 	public final String label;

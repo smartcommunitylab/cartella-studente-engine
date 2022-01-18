@@ -51,7 +51,7 @@ public class GraphQLExperienceDataFetcher {
 	public DataFetcher<Stream<ExamDTO>> searchExamByPersonId() {
 		return dataFetchingEnvironment -> {
 			String personId = dataFetchingEnvironment.getArgument("personId");
-			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.educatinalActivity.label)
+			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.educationalActivity.label)
 					.map(this::getExamDTO)
 					.toStream();
 		};
@@ -60,7 +60,7 @@ public class GraphQLExperienceDataFetcher {
   public DataFetcher<Stream<StageDTO>> searchStageByPersonId() {
 		return dataFetchingEnvironment -> {
 			String personId = dataFetchingEnvironment.getArgument("personId");
-			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.educatinalActivity.label)
+			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.educationalActivity.label)
 					.map(this::getStageDTO)
 					.toStream();
 		};
@@ -78,7 +78,7 @@ public class GraphQLExperienceDataFetcher {
 	public DataFetcher<Stream<MobilityDTO>> searchMobilityByPersonId() {
 		return dataFetchingEnvironment -> {
 			String personId = dataFetchingEnvironment.getArgument("personId");
-			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.educatinalActivity.label)
+			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.educationalActivity.label)
 					.map(this::getMobilityDTO)
 					.toStream();
 		};
@@ -184,7 +184,7 @@ public class GraphQLExperienceDataFetcher {
 	private StageDTO getStageDTO(Experience e) {
 		StageDTO dto = new StageDTO();
 		fillExpDTO(dto, e);
-		DataView view = e.getViews().get(EntityType.educatinalActivity.label);
+		DataView view = e.getViews().get(EntityType.educationalActivity.label);
 		if(view != null) {
 			dto.setType((String) view.getAttributes().get(EducatinalActivityAttr.type.label));
 			dto.setDuration((String) view.getAttributes().get(EducatinalActivityAttr.duration.label));
