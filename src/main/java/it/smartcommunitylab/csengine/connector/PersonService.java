@@ -30,7 +30,7 @@ public class PersonService {
 		return Flux.fromIterable(list)
 				.concatMap(conf -> {
 					PersonConnector connector = connectorManager.getPersonService(conf.getView());
-					return connector.refreshPerson(person).flatMap(p -> {
+					return connector.refreshPerson(person, conf.getView(), conf.getUri()).flatMap(p -> {
 							DataView view = p.getViews().get(conf.getView());
 							if(view != null) {
 								return personRepository.findByFiscalCode(p.getFiscalCode())

@@ -7,12 +7,12 @@ import java.net.URL;
 
 import javax.annotation.PostConstruct;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 
 import graphql.GraphQL;
 import graphql.schema.GraphQLSchema;
@@ -21,8 +21,8 @@ import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
 import it.smartcommunitylab.csengine.common.CertificationAttr;
+import it.smartcommunitylab.csengine.common.EducatinalActivityAttr;
 import it.smartcommunitylab.csengine.common.ExpAttr;
-import it.smartcommunitylab.csengine.common.StageAttr;
 import it.smartcommunitylab.csengine.graphql.fetcher.GraphQLExperienceDataFetcher;
 import it.smartcommunitylab.csengine.graphql.fetcher.GraphQLPersonDataFetcher;
 
@@ -81,7 +81,7 @@ public class GraphQLProvider {
 		    .type(newTypeWiring("Stage")
 		    		.dataFetcher("organisation", experienceDataFetcher.getOrganisation())
 		    		.dataFetcher("competences", experienceDataFetcher.getCompetences())
-						.dataFetcher("address", experienceDataFetcher.getAddress(StageAttr.address.label))
+						.dataFetcher("address", experienceDataFetcher.getAddress(EducatinalActivityAttr.address.label))
 		    )    		
 		    .type(newTypeWiring("Certification")
 		    		.dataFetcher("organisation", experienceDataFetcher.getOrganisation())

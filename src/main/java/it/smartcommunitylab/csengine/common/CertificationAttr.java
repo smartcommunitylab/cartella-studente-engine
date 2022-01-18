@@ -4,7 +4,6 @@ public enum CertificationAttr {
 	type("type"), //String
 	duration("duration"), //String
 	address("address"), //Address
-	contact("contact"), //String
 	grade("grade"), //String
 	language("language"), //String
 	level("level"); //String

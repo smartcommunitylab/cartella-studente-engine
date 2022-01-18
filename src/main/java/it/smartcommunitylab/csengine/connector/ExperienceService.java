@@ -45,7 +45,7 @@ public class ExperienceService {
 			return Flux.empty();
 		}
 		ExperienceConnector connector = connectorManager.getExpService(entityType, viewName);
-		return connector.refreshExp(person).concatMap(e -> {
+		return connector.refreshExp(person, entityType, viewName, conf.getUri()).concatMap(e -> {
 			DataView view = e.getViews().get(conf.getView());
 			if(view != null) {
 				return experienceRepository.findByExtRef(conf.getView(), 
@@ -70,7 +70,7 @@ public class ExperienceService {
 				.concatMap(conf -> {
 					logger.info("mergeExperienceView:" + conf.getView());
 					ExperienceConnector connector = connectorManager.getExpService(entityType, conf.getView());
-					return connector.refreshExp(person).concatMap(e -> {
+					return connector.refreshExp(person, entityType, conf.getView(), conf.getUri()).concatMap(e -> {
 						DataView view = e.getViews().get(conf.getView());
 						if(view != null) {
 							return experienceRepository.findByExtRef(conf.getView(), 

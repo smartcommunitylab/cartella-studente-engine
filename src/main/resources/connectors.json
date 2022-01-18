@@ -1,50 +1,43 @@
 {
 	"connectors": [
 		{
-			"entityType": "exam",
+			"entityType": "education",
 			"view": "saa_1",
 			"priority": 1,
-			"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAExamService",
-			"uri": "http://localhost:8282/saa"
+			"implementor": "it.smartcommunitylab.csengine.connector.impl.GenericExperienceConnector",
+			"uri": "http://localhost:8282/saa/education"
 		},
 		{
-			"entityType": "stage",
+			"entityType": "educatinalActivity",
 			"view": "saa_1",
 			"priority": 1,
-			"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAStageService",
-			"uri": "http://localhost:8282/saa"
+			"implementor": "it.smartcommunitylab.csengine.connector.impl.GenericExperienceConnector",
+			"uri": "http://localhost:8282/saa/educatinalActivity"
 		},
 		{
-			"entityType": "stage",
+			"entityType": "educatinalActivity",
 			"view": "edit_1",
 			"priority": 2,
-			"implementor": "it.smartcommunitylab.csengine.connector.edit.EditStageService",
-			"uri": "http://localhost:8080/cse/edit"
+			"implementor": "it.smartcommunitylab.csengine.connector.impl.GenericExperienceConnector",
+			"uri": "http://localhost:8383/edit/educatinalActivity"
 		},
 		{
 			"entityType": "certification",
 			"view": "saa_1",
 			"priority": 1,
-			"implementor": "it.smartcommunitylab.csengine.connector.saa.SAACertificationService",
-			"uri": "http://localhost:8282/saa"
-		},
-		{
-			"entityType": "enrollment",
-			"view": "saa_1",
-			"priority": 1,
-			"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAEnrollmentService",
-			"uri": "http://localhost:8282/saa"
+			"implementor": "it.smartcommunitylab.csengine.connector.impl.GenericExperienceConnector",
+			"uri": "http://localhost:8282/saa/certification"
 		},
 		{
 			"entityType": "person",
 			"view": "saa_1",
 			"priority": 1,
-			"implementor": "it.smartcommunitylab.csengine.connector.saa.SAAPersonService",
-			"uri": "http://localhost:8282/saa"
+			"implementor": "it.smartcommunitylab.csengine.connector.impl.GenericPersonConnector",
+			"uri": "http://localhost:8282/saa/student"
 		}
 	],
 	"identityMap": {
-		"stage": [
+		"educatinalActivity": [
 			{
 				"saa_1": "extId",
 				"edit_1": "failuretest"

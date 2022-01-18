@@ -1,0 +1,61 @@
+[
+	{
+		"entityType": "educatinalActivity",
+		"views": {
+			"exp": {
+				"attributes": {
+					"dateTo": "2021-04-13",
+					"dateFrom": "2021-04-13",
+					"title": "3° OP. CARPENTERIA IN LEGNO - PRIMO PERIODO",
+					"competences": [
+						{
+							"preferredLabel": {
+								"it": "pulire la superficie del legno"
+							},
+							"description": {
+								"it": "Utilizzare varie tecniche su una superficie in legno per garantire che sia esente da polvere, segatura, grasso, macchie e altri contaminanti."
+							},
+							"uri": "http://data.europa.eu/esco/skill/adf661fe-9429-4094-8671-ca69fb72ad02",
+							"concentType": "KnowledgeSkillCompetence"
+						},
+						{
+							"preferredLabel": {
+								"it": "rispettare le procedure in materia di salute e sicurezza nell�edilizia"
+							},
+							"description": {
+								"it": "Applicare le pertinenti procedure in materia di salute e sicurezza nel settore della costruzione al fine di prevenire incidenti, inquinamento e altri rischi."
+							},
+							"uri": "http://data.europa.eu/esco/skill/86df7af2-f9f3-4c06-a500-7f1fba9e78fe",
+							"concentType": "KnowledgeSkillCompetence"
+						}
+					]
+				}
+			},
+			"educatinalActivity": {
+				"attributes": {
+					"duration": "70",
+					"address": {
+						"extendedAddress": "EFFEFFE RESTAURI srl - LOCALITA' AL PONTE  38082 BORGO CHIESE (TN)"
+					},
+					"type": "Stage"
+				}
+			},
+			"edit_1": {
+				"identity": {
+					"extUri": "72163033",
+					"origin": "INFOTNISTRUZIONE"
+				},
+				"attributes": {
+					"duration": "70",
+					"dateTo": "2021-04-13",
+					"location": "EFFEFFE RESTAURI srl - LOCALITA' AL PONTE  38082 BORGO CHIESE (TN)",
+					"extId": "72163033",
+					"dateFrom": "2021-04-13",
+					"title": "3° OP. CARPENTERIA IN LEGNO - PRIMO PERIODO",
+					"type": "Terzo anno",
+					"saaId": "stage111"
+				}
+			}
+		}
+	}
+]

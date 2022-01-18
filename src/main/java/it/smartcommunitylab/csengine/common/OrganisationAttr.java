@@ -5,10 +5,11 @@ public enum OrganisationAttr {
 	name("name"), //String
 	description("description"), //String
 	address("address"), //Address
-	location("location"), //GeoJsonPoint
+	location("location"), //GeoPoint
 	phone("phone"), //String
 	email("email"), //String
-	pec("pec"); //String
+	pec("pec"), //String
+	link("link"); //String
 	
 	public final String label;
 	

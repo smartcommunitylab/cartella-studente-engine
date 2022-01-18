@@ -9,7 +9,8 @@ public enum ExpAttr {
 	validityFrom("validityFrom"), //String
 	validityTo("validityTo"), //String
 	competences("competences"), //List<Compatence_attr>
-	organisation("organisation"); //Organisation_attr
+	organisation("organisation"), //Organisation_attr
+	annotation("annotation"); //Annotation_attr
 	
 	public final String label;
 	

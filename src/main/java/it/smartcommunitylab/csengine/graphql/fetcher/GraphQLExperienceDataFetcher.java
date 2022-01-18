@@ -12,12 +12,11 @@ import org.springframework.stereotype.Component;
 import graphql.schema.DataFetcher;
 import it.smartcommunitylab.csengine.common.CertificationAttr;
 import it.smartcommunitylab.csengine.common.CompetenceAttr;
-import it.smartcommunitylab.csengine.common.EnrollmentAttr;
+import it.smartcommunitylab.csengine.common.EducatinalActivityAttr;
+import it.smartcommunitylab.csengine.common.EducationAttr;
 import it.smartcommunitylab.csengine.common.EntityType;
-import it.smartcommunitylab.csengine.common.ExamAttr;
 import it.smartcommunitylab.csengine.common.ExpAttr;
 import it.smartcommunitylab.csengine.common.OrganisationAttr;
-import it.smartcommunitylab.csengine.common.StageAttr;
 import it.smartcommunitylab.csengine.model.Address;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
@@ -52,7 +51,7 @@ public class GraphQLExperienceDataFetcher {
 	public DataFetcher<Stream<ExamDTO>> searchExamByPersonId() {
 		return dataFetchingEnvironment -> {
 			String personId = dataFetchingEnvironment.getArgument("personId");
-			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.exam.label)
+			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.educatinalActivity.label)
 					.map(this::getExamDTO)
 					.toStream();
 		};
@@ -61,7 +60,7 @@ public class GraphQLExperienceDataFetcher {
   public DataFetcher<Stream<StageDTO>> searchStageByPersonId() {
 		return dataFetchingEnvironment -> {
 			String personId = dataFetchingEnvironment.getArgument("personId");
-			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.stage.label)
+			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.educatinalActivity.label)
 					.map(this::getStageDTO)
 					.toStream();
 		};
@@ -79,7 +78,7 @@ public class GraphQLExperienceDataFetcher {
 	public DataFetcher<Stream<MobilityDTO>> searchMobilityByPersonId() {
 		return dataFetchingEnvironment -> {
 			String personId = dataFetchingEnvironment.getArgument("personId");
-			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.mobility.label)
+			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.educatinalActivity.label)
 					.map(this::getMobilityDTO)
 					.toStream();
 		};
@@ -88,7 +87,7 @@ public class GraphQLExperienceDataFetcher {
 	public DataFetcher<Stream<EnrollmentDTO>> searchEnrollmentByPersonId() {
 		return dataFetchingEnvironment -> {
 			String personId = dataFetchingEnvironment.getArgument("personId");
-			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.mobility.label)
+			return experienceRepository.findAllByPersonIdAndEntityType(personId, EntityType.education.label)
 					.map(this::getEnrollmentDTO)
 					.toStream();
 		};
@@ -170,14 +169,14 @@ public class GraphQLExperienceDataFetcher {
 	private ExamDTO getExamDTO(Experience e) {
 		ExamDTO dto = new ExamDTO();
 		fillExpDTO(dto, e);
-		DataView examView = e.getViews().get(EntityType.exam.label);	
+		DataView examView = e.getViews().get(EntityType.education.label);	
 		if(examView != null) {
-			dto.setType((String) examView.getAttributes().get(ExamAttr.type.label));
-			dto.setQualification((String) examView.getAttributes().get(ExamAttr.qualification.label));
-			dto.setHonour((Boolean) examView.getAttributes().get(ExamAttr.honour.label));
-			dto.setGrade((String) examView.getAttributes().get(ExamAttr.grade.label));
-			dto.setResult((Boolean) examView.getAttributes().get(ExamAttr.result.label));
-			dto.setExternalCandidate((Boolean) examView.getAttributes().get(ExamAttr.externalCandidate.label));			
+			dto.setType((String) examView.getAttributes().get(EducationAttr.type.label));
+			dto.setQualification((String) examView.getAttributes().get(EducationAttr.qualification.label));
+			dto.setHonour((Boolean) examView.getAttributes().get(EducationAttr.honour.label));
+			dto.setGrade((String) examView.getAttributes().get(EducationAttr.grade.label));
+			//dto.setResult((Boolean) examView.getAttributes().get(EducationAttr.result.label));
+			//dto.setExternalCandidate((Boolean) examView.getAttributes().get(EducationAttr.externalCandidate.label));			
 		}
 		return dto;
 	}
@@ -185,12 +184,12 @@ public class GraphQLExperienceDataFetcher {
 	private StageDTO getStageDTO(Experience e) {
 		StageDTO dto = new StageDTO();
 		fillExpDTO(dto, e);
-		DataView view = e.getViews().get(EntityType.stage.label);
+		DataView view = e.getViews().get(EntityType.educatinalActivity.label);
 		if(view != null) {
-			dto.setType((String) view.getAttributes().get(StageAttr.type.label));
-			dto.setDuration((String) view.getAttributes().get(StageAttr.duration.label));
-			dto.setContact((String) view.getAttributes().get(StageAttr.contact.label));
-			dto.setAddress((Address) view.getAttributes().get(StageAttr.address.label));
+			dto.setType((String) view.getAttributes().get(EducatinalActivityAttr.type.label));
+			dto.setDuration((String) view.getAttributes().get(EducatinalActivityAttr.duration.label));
+			//dto.setContact((String) view.getAttributes().get(EducatinalActivityAttr.contact.label));
+			dto.setAddress((Address) view.getAttributes().get(EducatinalActivityAttr.address.label));
 		}
 		return dto;
 	}
@@ -203,7 +202,7 @@ public class GraphQLExperienceDataFetcher {
 			dto.setType((String) view.getAttributes().get(CertificationAttr.type.label));
 			dto.setDuration((String) view.getAttributes().get(CertificationAttr.duration.label));
 			dto.setAddress((Address) view.getAttributes().get(CertificationAttr.address.label));
-			dto.setContact((String) view.getAttributes().get(CertificationAttr.contact.label));
+			//dto.setContact((String) view.getAttributes().get(CertificationAttr.contact.label));
 			dto.setGrade((String) view.getAttributes().get(CertificationAttr.grade.label));
 			dto.setLanguage((String) view.getAttributes().get(CertificationAttr.language.label));
 			dto.setLevel((String) view.getAttributes().get(CertificationAttr.level.label));
@@ -225,11 +224,11 @@ public class GraphQLExperienceDataFetcher {
 	private EnrollmentDTO getEnrollmentDTO(Experience e) {
 		EnrollmentDTO dto = new EnrollmentDTO();
 		fillExpDTO(dto, e);
-		DataView view = e.getViews().get(EntityType.certification.label);
+		DataView view = e.getViews().get(EntityType.education.label);
 		if(view != null) {
-			dto.setSchoolYear((String) view.getAttributes().get(EnrollmentAttr.schoolYear.label));
-			dto.setCourse((String) view.getAttributes().get(EnrollmentAttr.course.label));
-			dto.setClassroom((String) view.getAttributes().get(EnrollmentAttr.classroom.label));
+			//dto.setSchoolYear((String) view.getAttributes().get(EducatinalActivityAttr.schoolYear.label));
+			//dto.setCourse((String) view.getAttributes().get(EducatinalActivityAttr.course.label));
+			//dto.setClassroom((String) view.getAttributes().get(EducatinalActivityAttr.classroom.label));
 		}
 		return dto;
 	}

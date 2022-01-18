@@ -3,11 +3,9 @@ package it.smartcommunitylab.csengine.common;
 public enum EntityType {
 	person("person"),
 	exp("exp"),
-	stage("stage"),
-	exam("exam"),
 	certification("certification"),
-	mobility("mobility"),
-	enrollment("enrollment");
+	educatinalActivity("educatinalActivity"),
+	education("education");
 	
 	public final String label;
 	
