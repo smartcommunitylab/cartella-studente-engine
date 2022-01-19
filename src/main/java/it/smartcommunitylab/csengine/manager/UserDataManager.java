@@ -1,10 +1,14 @@
 package it.smartcommunitylab.csengine.manager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import it.smartcommunitylab.csengine.common.CompetenceAttr;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExpAttr;
 import it.smartcommunitylab.csengine.exception.BadRequestException;
@@ -12,8 +16,10 @@ import it.smartcommunitylab.csengine.exception.NotFoundException;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
 import it.smartcommunitylab.csengine.model.Person;
+import it.smartcommunitylab.csengine.model.dto.CompetenceReport;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
 import it.smartcommunitylab.csengine.repository.PersonRepository;
+import it.smartcommunitylab.csengine.util.Utils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -23,6 +29,10 @@ public class UserDataManager {
 	PersonRepository personRepository;
 	@Autowired
 	ExperienceRepository experienceRepository;
+	
+	public Mono<Person> getPerson(String fiscalCode) {
+		return personRepository.findByFiscalCode(fiscalCode);
+	}
 
 	public Mono<Experience> getExperience(String fiscalCode, String expId) throws Exception {
 		return personRepository.findByFiscalCode(fiscalCode)
@@ -181,8 +191,39 @@ public class UserDataManager {
 		}
 		return view;
 	}
+	
+	public Flux<CompetenceReport> getUserCompetences(String fiscalCode) {
+		return personRepository.findByFiscalCode(fiscalCode)
+		.flatMapMany(person -> {
+			if(person.getId() != null) {
+				Map<String, CompetenceReport> map = new HashMap<>();
+				return experienceRepository.findAllByPersonId(person.getId())
+						.collectList().flatMapMany(list -> {
+							for(Experience e : list) {
+								DataView view = e.getViews().get(EntityType.exp.label);
+								if((view != null) && (view.getAttributes().containsKey(ExpAttr.competences.label))) {
+									List<Map<String, Object>> competences = (List<Map<String, Object>>) view.getAttributes().get(ExpAttr.competences.label);
+									for(Map<String, Object> c : competences) {
+										String uri = (String) c.get(CompetenceAttr.uri.label);
+										if(Utils.isNotEmpty(uri)) {
+											CompetenceReport report = map.get(uri);
+											if(report == null) {
+												report = new CompetenceReport();
+												report.setCompetence(c);
+												report.setExperiences(new ArrayList<>());
+											}
+											report.getExperiences().add(e);
+											map.put(uri, report);
+										}
+									}
+								}
+							}
+							return Flux.fromIterable(map.values());
+						});
+			} else {
+				return Flux.empty();
+			}
+		});		
+	}
 
-	
-	
-	
 }

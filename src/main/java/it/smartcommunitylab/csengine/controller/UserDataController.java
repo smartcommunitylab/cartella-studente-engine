@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import it.smartcommunitylab.csengine.manager.UserDataManager;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
+import it.smartcommunitylab.csengine.model.Person;
+import it.smartcommunitylab.csengine.model.dto.CompetenceReport;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -24,6 +26,11 @@ public class UserDataController implements CSController {
 	@Autowired
 	private UserDataManager userDataManager;
 
+	@GetMapping("/api/user/profile")
+	public Mono<Person> getProfile() throws Exception {
+		return userDataManager.getPerson("111222");
+	}
+	
 	@GetMapping("/api/user/experience/{expId}")
 	public Mono<Experience> getExperience(
 			@PathVariable String expId,
@@ -95,4 +102,10 @@ public class UserDataController implements CSController {
 		return userDataManager.deleteExperience(fiscalCode, expId);
 	}
 	
+	@GetMapping("/api/user/competences")
+	public Flux<CompetenceReport> getUserCompetences(
+			@RequestParam String fiscalCode) throws Exception {
+		//TODO check role
+		return userDataManager.getUserCompetences(fiscalCode);		
+	}
 }
