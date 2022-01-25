@@ -1,5 +1,8 @@
 package it.smartcommunitylab.csengine.manager;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,17 +10,21 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import it.smartcommunitylab.csengine.common.CompetenceAttr;
 import it.smartcommunitylab.csengine.common.EntityType;
 import it.smartcommunitylab.csengine.common.ExpAttr;
 import it.smartcommunitylab.csengine.exception.BadRequestException;
 import it.smartcommunitylab.csengine.exception.NotFoundException;
+import it.smartcommunitylab.csengine.exception.ServiceException;
 import it.smartcommunitylab.csengine.model.DataView;
 import it.smartcommunitylab.csengine.model.Experience;
+import it.smartcommunitylab.csengine.model.FileDocument;
 import it.smartcommunitylab.csengine.model.Person;
 import it.smartcommunitylab.csengine.model.dto.CompetenceReport;
 import it.smartcommunitylab.csengine.repository.ExperienceRepository;
+import it.smartcommunitylab.csengine.repository.FileDocumentRepository;
 import it.smartcommunitylab.csengine.repository.PersonRepository;
 import it.smartcommunitylab.csengine.util.Utils;
 import reactor.core.publisher.Flux;
@@ -29,6 +36,10 @@ public class UserDataManager {
 	PersonRepository personRepository;
 	@Autowired
 	ExperienceRepository experienceRepository;
+	@Autowired
+	private FileDocumentRepository documentRepository;
+	@Autowired
+	private DocumentManager documentManager;
 	
 	public Mono<Person> getPerson(String fiscalCode) {
 		return personRepository.findByFiscalCode(fiscalCode);
@@ -224,6 +235,67 @@ public class UserDataManager {
 				return Flux.empty();
 			}
 		});		
+	}
+	
+	public Mono<FileDocument> uploadDocumentFile(String fiscalCode, String expId, MultipartFile file) throws Exception {
+		return personRepository.findByFiscalCode(fiscalCode)
+		.switchIfEmpty(Mono.error(new NotFoundException("person not found")))
+		.flatMap(person -> {
+			return experienceRepository.findById(expId)
+					.switchIfEmpty(Mono.error(new NotFoundException("entity not found")))
+					.flatMap(exp -> {						
+						if(!exp.getPersonId().equals(person.getId())) {
+							return Mono.error(new BadRequestException("person id not corrispondig"));
+						}
+						FileDocument fd = new FileDocument();
+						fd.setPersonId(person.getId());
+						fd.setExperienceId(expId);
+						fd.setFileKey(Utils.getUUID());
+						fd.setContentType(file.getContentType());
+						fd.setFilename(file.getOriginalFilename());
+						fd.setSize(file.getSize());
+						fd.setDataUpload(LocalDate.now());
+						try {
+							documentManager.uploadFile(file, fd.getFileKey());
+						} catch (Exception e) {
+							return Mono.error(new ServiceException("storing file error:" + e.getMessage()));
+						}
+						return documentRepository.save(fd);
+					});			
+		});
+	}
+	
+	public Mono<Void> deleteDocumentFile(String personId, String expId, String docId) throws Exception {
+		return documentRepository.findById(docId)
+				.switchIfEmpty(Mono.error(new NotFoundException("doc not found")))
+				.flatMap(fd -> {
+					if(!expId.equals(fd.getExperienceId()) || !personId.equals(fd.getPersonId())) {
+						return Mono.error(new BadRequestException("person or experience not corrispondig"));
+					}
+					try {
+						documentManager.deleteFile(fd.getFileKey());
+					} catch (Exception e) {
+						return Mono.error(new ServiceException("deleting file error:" + e.getMessage()));
+					}
+					return documentRepository.delete(fd);
+				});
+	}
+	
+	public Mono<FileDocument> downloadDocumentFile(String personId, String expId, String docId) throws Exception {
+		return documentRepository.findById(docId)
+				.switchIfEmpty(Mono.error(new NotFoundException("doc not found")))
+				.flatMap(fd -> {
+					if(!expId.equals(fd.getExperienceId()) || !personId.equals(fd.getPersonId())) {
+						return Mono.error(new BadRequestException("person or experience not corrispondig"));
+					}
+					try {
+						String tmpFile = documentManager.downloadFile(fd.getFileKey());
+						fd.setLocalPath(tmpFile);
+						return Mono.just(fd);
+					} catch (Exception e) {
+						return Mono.error(new ServiceException("downloding file error:" + e.getMessage()));
+					}
+				});		
 	}
 
 }
